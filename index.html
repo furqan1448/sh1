@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>منظومة المشرفة التربوية - وحدة الإشراف</title>
+  <title>منظومة الإدارة والإشراف التربوي</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- مكتبات التصدير لإكسل و PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <style>
     :root {
       --main-color: #1a5276;
       --secondary-color: #2980b9;
+      --admin-color: #8e44ad;
       --bg-color: #f4f6f9;
       --card-bg: #ffffff;
       --text-color: #2c3e50;
@@ -24,14 +23,14 @@
     body { background-color: var(--bg-color); color: var(--text-color); padding-bottom: 50px; }
 
     header {
-      background: linear-gradient(135deg, var(--main-color), var(--secondary-color));
+      background: linear-gradient(135deg, var(--main-color), var(--admin-color));
       color: white; text-align: center; padding: 25px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
 
-    .container { max-width: 1000px; margin: 25px auto; padding: 0 15px; }
+    .container { max-width: 1050px; margin: 25px auto; padding: 0 15px; }
 
     .grid-menu {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 25px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 25px;
     }
 
     .card {
@@ -40,6 +39,7 @@
     }
     .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
     .card i { font-size: 3rem; color: var(--secondary-color); margin-bottom: 12px; }
+    .card.admin-card i { color: var(--admin-color); }
 
     .form-box {
       background: var(--card-bg); border-radius: 15px; padding: 25px;
@@ -56,7 +56,7 @@
     .form-group { margin-bottom: 15px; text-align: right; }
     .form-group.full-width { grid-column: 1 / -1; }
     .form-group label { display: block; margin-bottom: 6px; font-weight: bold; color: var(--main-color); }
-    .form-group select, .form-group input {
+    .form-group select, .form-group input, .form-group textarea {
       width: 100%; padding: 10px 12px; border: 1px solid #dcdfe6; border-radius: 8px; font-size: 0.95rem;
     }
 
@@ -66,6 +66,7 @@
       border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;
       justify-content: center; flex: 1; min-width: 140px;
     }
+    .btn-admin { background-color: var(--admin-color); }
     .btn-success { background-color: var(--success-color); }
     .btn-danger { background-color: var(--danger-color); }
     .btn-secondary { background-color: #7f8c8d; }
@@ -78,6 +79,9 @@
     .data-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; }
     .data-table th, .data-table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
     .data-table th { background-color: var(--main-color); color: white; }
+    .data-table th.admin-th { background-color: var(--admin-color); }
+
+    .badge-admin { background: var(--admin-color); color: white; padding: 3px 8px; border-radius: 5px; font-size: 0.8rem; }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
@@ -85,61 +89,136 @@
 <body>
 
   <header>
-    <h1><i class="fa-solid fa-graduation-cap"></i> موقع المشرفة التربوية</h1>
-    <p>وحدة الإشراف التربوي - المنظومة الشاملة</p>
+    <h1><i class="fa-solid fa-user-gear"></i> المنظومة الشاملة للإدارة والإشراف التربوي</h1>
+    <p>لوحة تحكم الإدارة ومتابعة أعمال المشرفات والنماذج</p>
   </header>
 
   <div class="container">
 
     <!-- شاشة تسجيل الدخول -->
-    <div id="login-box" class="form-box">
+    <div id="login-box" class="form-box active">
       <div class="section-header"><h2><i class="fa-solid fa-lock"></i> تسجيل الدخول</h2></div>
       <form id="loginForm">
         <div class="form-group">
-          <label>اسم المشرفة:</label>
+          <label>الدخول بصفتك:</label>
           <select id="loginUser" required>
-            <option value="">-- اختر اسم المشرفة --</option>
-            <option value="فاطمة الطلحي">فاطمة الطلحي</option>
-            <option value="فاطمة الثمالي">فاطمة الثمالي</option>
-            <option value="مريم بالبيد">مريم بالبيد</option>
-            <option value="مستورة الخديدي">مستورة الخديدي</option>
+            <option value="">-- اختر المستخدم --</option>
+            <option value="الإدارة العامة">👑 الإدارة العامة (المديرة/المتحكم)</option>
+            <option value="فاطمة الطلحي">فاطمة الطلحي (مشرفة)</option>
+            <option value="فاطمة الثمالي">فاطمة الثمالي (مشرفة)</option>
+            <option value="مريم بالبيد">مريم بالبيد (مشرفة)</option>
+            <option value="مستورة الخديدي">مستورة الخديدي (مشرفة)</option>
           </select>
         </div>
         <div class="form-group">
           <label>كلمة المرور:</label>
-          <input type="password" id="loginPass" required placeholder="أدخل كلمة المرور">
+          <input type="password" id="loginPass" required placeholder="أدخل كلمة المرور (الافتراضي: 123456)">
         </div>
-        <button type="submit" class="btn"><i class="fa-solid fa-right-to-bracket"></i> دخول</button>
+        <button type="submit" class="btn"><i class="fa-solid fa-right-to-bracket"></i> دخول المنظومة</button>
       </form>
     </div>
 
     <!-- لوحة التحكم الرئيسية -->
     <div id="dashboard-box" style="display: none;">
       <div class="user-bar">
-        <span>مرحباً بكِ: <span id="currentUserName"></span></span>
+        <span>مرحباً بك: <span id="currentUserName"></span> <span id="adminBadge" class="badge-admin" style="display:none;">إدارة</span></span>
         <button class="btn btn-secondary" style="width: auto; flex: none;" onclick="logout()"><i class="fa-solid fa-power-off"></i> خروج</button>
       </div>
 
       <div class="grid-menu">
+        <!-- أيقونة الإدارة المتحكمة (تظهر فقط للإدارة) -->
+        <div id="adminMenuCard" class="card admin-card" style="display:none;" onclick="openSection('admin-control-box'); fetchAllDataForAdmin();">
+          <i class="fa-solid fa-user-shield"></i>
+          <h3>لوحة الإدارة المتحكمة</h3>
+          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">متابعة جميع أعمال المشرفات وإضافة النماذج</p>
+        </div>
+
         <div class="card" onclick="openSection('daily-plan-box')">
           <i class="fa-solid fa-calendar-check"></i>
           <h3>الخطة اليومية</h3>
-          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">تسجيل الزيارات اليومية</p>
+          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">تسجيل ومتابعة الزيارات اليومية</p>
         </div>
+
         <div class="card" onclick="openSection('employees-box'); fetchEmployees();">
           <i class="fa-solid fa-id-card"></i>
           <h3>أحوال الموظفات</h3>
           <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">بيانات وتأهيل المعلمات</p>
         </div>
+
+        <!-- أيقونة نماذج المشرفة المتاحة للجميع -->
+        <div class="card" onclick="openSection('forms-box'); fetchAdminForms();">
+          <i class="fa-solid fa-file-signature"></i>
+          <h3>نماذج المشرفة</h3>
+          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">النماذج والاستمارات المعتمدة من الإدارة</p>
+        </div>
+
         <div class="card" onclick="openSection('attachments-box'); fetchAttachments();">
           <i class="fa-solid fa-paperclip"></i>
-          <h3>المرفقات</h3>
+          <h3>المرفقات العامة</h3>
           <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">إرفاق الاستمارات والروابط</p>
         </div>
       </div>
     </div>
 
-    <!-- قسم الخطة اليومية -->
+    <!-- 1. لوحة تحكم الإدارة المتحكمة (Admin) -->
+    <div id="admin-control-box" class="form-box">
+      <div class="section-header">
+        <h2><i class="fa-solid fa-user-shield" style="color:var(--admin-color);"></i> لوحة متابعة الإدارة المتحكمة</h2>
+        <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة</button>
+      </div>
+
+      <!-- إضافة نموذج جديد من الإدارة -->
+      <div style="background:#f9f4fc; padding:18px; border-radius:10px; border:1px solid #e1d5e7; margin-bottom:25px;">
+        <h3 style="color:var(--admin-color); margin-bottom:12px;"><i class="fa-solid fa-plus-circle"></i> إضافة نموذج/استمارة جديدة للمشرفات:</h3>
+        <form id="addAdminForm">
+          <div class="form-grid">
+            <div class="form-group"><label>عنوان النموذج:</label><input type="text" id="formTitle" placeholder="مثال: استمارة زيارة تقويمية 2026" required></div>
+            <div class="form-group"><label>وصف مختصر:</label><input type="text" id="formDesc" placeholder="توجيهات أو تعليمات حول النموذج"></div>
+            <div class="form-group full-width"><label>رابط النموذج (Google Forms / Drive / Word):</label><input type="url" id="formLink" placeholder="https://..." required></div>
+          </div>
+          <button type="submit" class="btn btn-admin"><i class="fa-solid fa-paper-plane"></i> نشر النموذج للمشرفات</button>
+        </form>
+      </div>
+
+      <!-- تقرير متابعة أداء وحركات جميع المشرفات -->
+      <h3 style="color:var(--main-color); margin-bottom:10px;"><i class="fa-solid fa-chart-line"></i> تقرير أعمال وخطط المشرفات المسجلة:</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="admin-th">تاريخ التسجيل</th>
+            <th class="admin-th">اسم المشرفة</th>
+            <th class="admin-th">المعلمة المستهدفة</th>
+            <th class="admin-th">نوع الزيارة</th>
+            <th class="admin-th">اليوم والتاريخ</th>
+            <th class="admin-th">استمارة الزيارة</th>
+          </tr>
+        </thead>
+        <tbody id="adminPlansTable"></tbody>
+      </table>
+    </div>
+
+    <!-- 2. قسم نماذج المشرفة (تستعرض فيه المشرفة النماذج المضافة من الإدارة) -->
+    <div id="forms-box" class="form-box">
+      <div class="section-header">
+        <h2><i class="fa-solid fa-file-signature"></i> نماذج واستمارات المشرفة</h2>
+        <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة</button>
+      </div>
+      <p style="color:#7f8c8d; margin-bottom:15px;">النماذج الرسمية المعتمدة من الإدارة للعمل بها:</p>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>عنوان النموذج</th>
+            <th>التعليمات والوصف</th>
+            <th>تاريخ الإضافة</th>
+            <th>رابط الفتح/التحميل</th>
+          </tr>
+        </thead>
+        <tbody id="supervisorFormsTable"></tbody>
+      </table>
+    </div>
+
+    <!-- 3. قسم الخطة اليومية -->
     <div id="daily-plan-box" class="form-box">
       <div class="section-header">
         <h2><i class="fa-solid fa-calendar-day"></i> الخطة اليومية</h2>
@@ -178,7 +257,7 @@
       </form>
     </div>
 
-    <!-- قسم أحوال الموظفات -->
+    <!-- 4. قسم أحوال الموظفات -->
     <div id="employees-box" class="form-box">
       <div class="section-header">
         <h2><i class="fa-solid fa-users"></i> أحوال الموظفات</h2>
@@ -220,28 +299,25 @@
 
       <hr style="margin:25px 0;">
 
-      <!-- جدول وإمكانية التصدير -->
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <h3>قائمة الموظفات المسجلة:</h3>
-        <div class="btn-group" style="margin:0; flex:none;">
-          <button class="btn btn-secondary" style="padding: 5px 10px;" onclick="exportExcel()"><i class="fa-solid fa-file-excel"></i> تصدير إكسل</button>
-        </div>
+        <button class="btn btn-secondary" style="padding: 5px 10px; width:auto;" onclick="exportExcel()"><i class="fa-solid fa-file-excel"></i> تصدير إكسل</button>
       </div>
 
       <table class="data-table" id="empTable">
         <thead>
           <tr>
-            <th>اسم المعلمة</th><th>المؤهل</th><th>مؤهل القرآن</th><th>الفئة</th><th>الدورات</th><th>الجنسية</th><th>الهاتف</th><th>إجراءات</th>
+            <th>اسم المعلمة</th><th>المؤهل</th><th>مؤهل القرآن</th><th>الفئة</th><th>الدورات</th><th>الجنسية</th><th>الهاتف</th><th>حذف</th>
           </tr>
         </thead>
         <tbody id="empTableBody"></tbody>
       </table>
     </div>
 
-    <!-- قسم المرفقات -->
+    <!-- 5. قسم المرفقات -->
     <div id="attachments-box" class="form-box">
       <div class="section-header">
-        <h2><i class="fa-solid fa-folder-open"></i> المرفقات والروابط</h2>
+        <h2><i class="fa-solid fa-folder-open"></i> المرفقات والروابط العامة</h2>
         <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة</button>
       </div>
 
@@ -266,32 +342,38 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwMn4j5HPrhln8zhJU9MwAlJOnl-iUmWwcQnKry97cl7N7MBykfnu92_dS1szzqhLEyAw/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxrgnOlEjY-8thiUpWqJF2zHPsTZqA0cNH-bv9ZAhs3z4inYD9n3sJ-L4x7e5AwLieJYg/exec";
     let currentUser = "";
+    let isAdmin = false;
 
-    // 1. حل مشكلة الخروج عند تحديث الصفحة (Auto-login session)
     window.onload = function() {
       const savedUser = sessionStorage.getItem('supervisor_user');
       if (savedUser) {
         currentUser = savedUser;
-        document.getElementById('currentUserName').innerText = currentUser;
-        document.getElementById('login-box').style.display = 'none';
-        document.getElementById('dashboard-box').style.display = 'block';
+        isAdmin = (currentUser === "الإدارة العامة");
+        setupUIForUser();
       } else {
         document.getElementById('login-box').classList.add('active');
       }
       loadDraft();
     };
 
-    // تسجيل الدخول
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
       currentUser = document.getElementById('loginUser').value;
-      sessionStorage.setItem('supervisor_user', currentUser); // حفظ الجلسة
+      isAdmin = (currentUser === "الإدارة العامة");
+      sessionStorage.setItem('supervisor_user', currentUser);
+      setupUIForUser();
+    });
+
+    function setupUIForUser() {
       document.getElementById('currentUserName').innerText = currentUser;
+      document.getElementById('adminBadge').style.display = isAdmin ? 'inline-block' : 'none';
+      document.getElementById('adminMenuCard').style.display = isAdmin ? 'block' : 'none';
+      
       document.getElementById('login-box').style.display = 'none';
       document.getElementById('dashboard-box').style.display = 'block';
-    });
+    }
 
     function logout() {
       sessionStorage.removeItem('supervisor_user');
@@ -309,7 +391,63 @@
       document.getElementById('dashboard-box').style.display = 'block';
     }
 
-    // --- أحوال الموظفات: المسودة والمزامنة ---
+    // --- وظائف الإدارة المتحكمة ---
+    document.getElementById('addAdminForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const payload = {
+        action: "saveAdminForm",
+        title: document.getElementById('formTitle').value,
+        description: document.getElementById('formDesc').value,
+        url: document.getElementById('formLink').value
+      };
+
+      fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
+      .then(() => {
+        alert('👑 تم نشر النموذج بنجاح لجميع المشرفات!');
+        document.getElementById('addAdminForm').reset();
+      });
+    });
+
+    function fetchAllDataForAdmin() {
+      fetch(SCRIPT_URL + "?action=getDailyPlans")
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById('adminPlansTable');
+        tbody.innerHTML = data.map(p => `
+          <tr>
+            <td><small>${p.timestamp || '-'}</small></td>
+            <td><b>${p.supervisor}</b></td>
+            <td>${p.teacher}</td>
+            <td>${p.visitType}</td>
+            <td>${p.day} (${p.date})</td>
+            <td><a href="${p.formUrl}" target="_blank" style="color:var(--admin-color); font-weight:bold;">عرض الاستمارة</a></td>
+          </tr>
+        `).join('');
+      });
+    }
+
+    // --- وظائف نماذج المشرفة ---
+    function fetchAdminForms() {
+      fetch(SCRIPT_URL + "?action=getAdminForms")
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById('supervisorFormsTable');
+        if(!data || data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4">لا توجد نماذج مضافة من الإدارة حالياً</td></tr>';
+          return;
+        }
+        tbody.innerHTML = data.map(f => `
+          <tr>
+            <td><b>${f.title}</b></td>
+            <td>${f.description || 'لا يوجد وصف'}</td>
+            <td><small>${f.timestamp || '-'}</small></td>
+            <td><a href="${f.url}" target="_blank" class="btn btn-admin" style="display:inline-flex; padding:4px 12px; font-size:0.85rem;"><i class="fa-solid fa-arrow-up-right-from-square"></i> فتح النموذج</a></td>
+          </tr>
+        `).join('');
+      });
+    }
+
+    // --- أحوال الموظفات والخطة اليومية والمرفقات ---
     function saveDraft() {
       const draft = {
         teacher: document.getElementById('empName').value,
@@ -321,7 +459,7 @@
         phone: document.getElementById('empPhone').value
       };
       localStorage.setItem('emp_draft', JSON.stringify(draft));
-      alert('📝 تم حفظ البيانات كمسودة محلياً في جهازك!');
+      alert('📝 تم حفظ البيانات كمسودة محلياً!');
     }
 
     function loadDraft() {
@@ -337,7 +475,25 @@
       }
     }
 
-    // حفظ الموظفة في قوقل شيت
+    document.getElementById('dailyPlanForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const payload = {
+        action: "saveDailyPlan", supervisor: currentUser,
+        teacher: document.getElementById('teacherName').value,
+        period: document.getElementById('period').value,
+        day: document.getElementById('dayName').value,
+        date: document.getElementById('visitDate').value,
+        visitType: document.getElementById('visitType').value,
+        formUrl: document.getElementById('formUrl').value
+      };
+      fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
+      .then(() => {
+        alert('✅ تم حفظ الخطة بنجاح في Google Sheet!');
+        document.getElementById('dailyPlanForm').reset();
+        backToDashboard();
+      });
+    });
+
     document.getElementById('employeeForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const payload = {
@@ -350,10 +506,9 @@
         nationality: document.getElementById('empNationality').value,
         phone: document.getElementById('empPhone').value
       };
-
       fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
       .then(() => {
-        alert('✅ تم حفظ بيانات الموظفة بنجاح في Google Sheet!');
+        alert('✅ تم حفظ بيانات الموظفة في Google Sheet!');
         localStorage.removeItem('emp_draft');
         document.getElementById('employeeForm').reset();
         fetchEmployees();
@@ -365,32 +520,22 @@
       .then(res => res.json())
       .then(data => {
         const tbody = document.getElementById('empTableBody');
-        tbody.innerHTML = data.map((e, index) => `
+        tbody.innerHTML = data.map(e => `
           <tr>
             <td>${e.teacher}</td><td>${e.degree}</td><td>${e.quranDegree}</td><td>${e.category}</td>
             <td>${e.courses}</td><td>${e.nationality}</td><td>${e.phone}</td>
-            <td>
-              <button class="btn btn-danger" style="padding:2px 8px; font-size:0.75rem;" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></button>
-            </td>
+            <td><button class="btn btn-danger" style="padding:2px 8px; font-size:0.75rem;" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td>
           </tr>
         `).join('');
       });
     }
 
-    function deleteRow(btn) {
-      if (confirm("هل أجهزة متأكدة من حذف هذا السجل محلياً؟ (يمكنكِ تعديله/حذفه نهائياً مباشرة من ملف قوقل شيت)")) {
-        btn.closest('tr').remove();
-      }
-    }
-
-    // تصدير لإكسل
     function exportExcel() {
       var table = document.getElementById("empTable");
       var wb = XLSX.utils.table_to_book(table, {sheet: "الموظفات"});
       XLSX.writeFile(wb, "احوال_الموظفات.xlsx");
     }
 
-    // --- المرفقات ---
     document.getElementById('attachForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const payload = {
@@ -398,7 +543,6 @@
         title: document.getElementById('attachTitle').value,
         url: document.getElementById('attachUrl').value
       };
-
       fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
       .then(() => {
         alert('✅ تم إضافة المرفق بنجاح!');
@@ -417,7 +561,7 @@
             <td><b>${a.title}</b></td>
             <td>${a.supervisor}</td>
             <td><a href="${a.url}" target="_blank" style="color:var(--secondary-color); font-weight:bold;">عرض الملف</a></td>
-            <td><button class="btn btn-danger" style="padding:2px 8px; font-size:0.75rem;" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></button></td>
+            <td><button class="btn btn-danger" style="padding:2px 8px; font-size:0.75rem;" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td>
           </tr>
         `).join('');
       });
