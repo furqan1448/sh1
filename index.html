@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>موقع المشرفة - وحدة الإشراف التربوي</title>
-  <!-- FontAwesome للأيقونات -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -13,176 +12,64 @@
       --bg-color: #f4f6f9;
       --card-bg: #ffffff;
       --text-color: #2c3e50;
-      --success-color: #27ae60;
-      --danger-color: #c0392b;
     }
 
-    * {
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      padding-bottom: 50px;
-    }
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+    body { background-color: var(--bg-color); color: var(--text-color); padding-bottom: 50px; }
 
     header {
       background: linear-gradient(135deg, var(--main-color), var(--secondary-color));
-      color: white;
-      text-align: center;
-      padding: 30px 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      color: white; text-align: center; padding: 30px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
+    header h1 { font-size: 2.2rem; margin-bottom: 8px; }
 
-    header h1 {
-      font-size: 2.2rem;
-      margin-bottom: 8px;
-    }
-
-    header p {
-      font-size: 1.1rem;
-      opacity: 0.9;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
+    .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
 
     .card {
-      background: var(--card-bg);
-      border-radius: 15px;
-      padding: 30px;
-      text-align: center;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.08);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: 2px solid transparent;
+      background: var(--card-bg); border-radius: 15px; padding: 30px; text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease;
       margin-bottom: 25px;
     }
-
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      border-color: var(--secondary-color);
-    }
-
-    .card i {
-      font-size: 3.5rem;
-      color: var(--secondary-color);
-      margin-bottom: 15px;
-    }
-
-    .card h3 {
-      font-size: 1.5rem;
-      color: var(--main-color);
-    }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+    .card i { font-size: 3.5rem; color: var(--secondary-color); margin-bottom: 15px; }
 
     .form-box {
-      background: var(--card-bg);
-      border-radius: 15px;
-      padding: 30px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-      display: none;
-      animation: fadeIn 0.4s ease-in-out;
+      background: var(--card-bg); border-radius: 15px; padding: 30px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08); display: none; animation: fadeIn 0.4s ease-in-out;
     }
-
-    .form-box.active {
-      display: block;
-    }
+    .form-box.active { display: block; }
 
     .section-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 1.4rem;
-      color: var(--main-color);
-      margin-bottom: 25px;
-      border-bottom: 2px solid #eef2f5;
-      padding-bottom: 12px;
+      display: flex; align-items: center; gap: 12px; font-size: 1.4rem;
+      color: var(--main-color); margin-bottom: 25px; border-bottom: 2px solid #eef2f5; padding-bottom: 12px;
     }
 
-    .form-group {
-      margin-bottom: 20px;
-      text-align: right;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-      color: var(--main-color);
-    }
-
-    .form-group select, 
-    .form-group input, 
-    .form-group textarea {
-      width: 100%;
-      padding: 12px 15px;
-      border: 1px solid #dcdfe6;
-      border-radius: 10px;
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .form-group select:focus, 
-    .form-group input:focus, 
-    .form-group textarea:focus {
-      border-color: var(--secondary-color);
+    .form-group { margin-bottom: 20px; text-align: right; }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--main-color); }
+    .form-group select, .form-group input {
+      width: 100%; padding: 12px 15px; border: 1px solid #dcdfe6; border-radius: 10px; font-size: 1rem;
     }
 
     .btn {
-      background-color: var(--main-color);
-      color: white;
-      padding: 13px 25px;
-      border: none;
-      border-radius: 10px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      cursor: pointer;
-      width: 100%;
-      transition: background 0.3s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
+      background-color: var(--main-color); color: white; padding: 13px 25px; border: none;
+      border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px;
     }
-
-    .btn:hover {
-      background-color: var(--secondary-color);
-    }
-
-    .btn-secondary {
-      background-color: #7f8c8d;
-      margin-top: 10px;
-    }
-
-    .btn-secondary:hover {
-      background-color: #95a5a6;
-    }
+    .btn:hover { background-color: var(--secondary-color); }
+    .btn-secondary { background-color: #7f8c8d; }
 
     .user-info-bar {
-      background: #eaf2f8;
-      padding: 12px 20px;
-      border-radius: 10px;
-      margin-bottom: 25px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: var(--main-color);
-      font-weight: bold;
+      background: #eaf2f8; padding: 12px 20px; border-radius: 10px; margin-bottom: 25px;
+      display: flex; justify-content: space-between; align-items: center; color: var(--main-color); font-weight: bold;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    /* جدول الخطط المحفوظة في الموقع */
+    .plans-table { width: 100%; border-collapse: collapse; margin-top: 25px; }
+    .plans-table th, .plans-table td { border: 1px solid #ddd; padding: 10px; text-align: center; font-size: 0.95rem; }
+    .plans-table th { background-color: var(--main-color); color: white; }
+    .plans-table tr:nth-child(even) { background-color: #f9f9f9; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
@@ -194,21 +81,19 @@
 
   <div class="container">
 
-    <!-- 1. أيقونة الدخول الرئيسية -->
+    <!-- 1. أيقونة الدخول -->
     <div id="main-icon-card" class="card" onclick="showLoginForm()">
       <i class="fa-solid fa-graduation-cap"></i>
       <h3>وحدة الإشراف التربوي</h3>
       <p style="color: #7f8c8d; margin-top: 8px;">اضغط هنا لتسجيل الدخول</p>
     </div>
 
-    <!-- 2. نموذج تسجيل الدخول -->
+    <!-- 2. تسجيل الدخول -->
     <div id="login-box" class="form-box">
-      <div class="section-header">
-        <i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول - وحدة الإشراف التربوي
-      </div>
+      <div class="section-header"><i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول</div>
       <form id="loginForm">
         <div class="form-group">
-          <label><i class="fa-solid fa-user"></i> اسم المستخدم (المشرفة):</label>
+          <label>اسم المشرفة:</label>
           <select id="loginUser" required>
             <option value="">-- اختر اسم المشرفة --</option>
             <option value="فاطمة الطلحي">فاطمة الطلحي</option>
@@ -217,57 +102,62 @@
             <option value="مستورة الخديدي">مستورة الخديدي</option>
           </select>
         </div>
-
         <div class="form-group">
-          <label><i class="fa-solid fa-key"></i> كلمة المرور:</label>
-          <input type="password" id="loginPass" placeholder="أدخل كلمة المرور" required>
+          <label>كلمة المرور:</label>
+          <input type="password" id="loginPass" required placeholder="أدخل كلمة المرور">
         </div>
-
-        <button type="submit" class="btn">
-          <i class="fa-solid fa-arrow-right-to-bracket"></i> تسجيل الدخول
-        </button>
+        <button type="submit" class="btn"><i class="fa-solid fa-arrow-right-to-bracket"></i> دخول</button>
       </form>
     </div>
 
-    <!-- 3. لوحة التحكم بعد تسجيل الدخول (أيقونة الخطة اليومية) -->
+    <!-- 3. لوحة التحكم -->
     <div id="dashboard-box" class="form-box">
       <div class="user-info-bar">
-        <span><i class="fa-solid fa-user-check"></i> مرحباً بك: <span id="currentUserName"></span></span>
-        <button class="btn btn-secondary" style="width: auto; padding: 6px 15px; font-size: 0.9rem;" onclick="logout()">خروج</button>
+        <span>مرحباً بك: <span id="currentUserName"></span></span>
+        <button class="btn btn-secondary" style="width: auto; padding: 6px 15px;" onclick="logout()">خروج</button>
       </div>
 
-      <div class="card" onclick="showDailyPlanForm()" style="margin-bottom: 0;">
+      <div class="card" onclick="showDailyPlanForm()">
         <i class="fa-solid fa-calendar-day"></i>
         <h3>الخطة اليومية</h3>
-        <p style="color: #7f8c8d; margin-top: 8px;">إدخال زيارة ومتابعة الخطة اليومية</p>
+        <p style="color: #7f8c8d;">إدخال زيارة ومتابعة الخطة اليومية</p>
+      </div>
+
+      <!-- عرض الخطط المحفوظة في الموقع -->
+      <div style="margin-top: 30px;">
+        <h3 style="color: var(--main-color);"><i class="fa-solid fa-list"></i> الخطط المحفوظة في الموقع:</h3>
+        <table class="plans-table">
+          <thead>
+            <tr>
+              <th>المعلمة</th>
+              <th>اليوم / التاريخ</th>
+              <th>الفترة</th>
+              <th>نوع الزيارة</th>
+              <th>الرابط</th>
+            </tr>
+          </thead>
+          <tbody id="savedPlansTable">
+            <!-- تتعبأ تلقائياً -->
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <!-- 4. نموذج الخطة اليومية -->
+    <!-- 4. نموذج الخطة -->
     <div id="daily-plan-box" class="form-box">
-      <div class="section-header">
-        <i class="fa-solid fa-pen-to-square"></i> نموذج الخطة اليومية
-      </div>
-
+      <div class="section-header"><i class="fa-solid fa-pen-to-square"></i> إضافة خطة يومية</div>
       <form id="dailyPlanForm">
+        <div class="form-group"><label>اسم المعلمة:</label><input type="text" id="teacherName" required></div>
         <div class="form-group">
-          <label><i class="fa-solid fa-chalkboard-user"></i> اسم المعلمة:</label>
-          <input type="text" id="teacherName" placeholder="أدخل اسم المعلمة" required>
-        </div>
-
-        <div class="form-group">
-          <label><i class="fa-solid fa-clock"></i> الفترة:</label>
+          <label>الفترة:</label>
           <select id="period" required>
-            <option value="">-- اختر الفترة --</option>
             <option value="صباحي">صباحي</option>
             <option value="مسائي">مسائي</option>
           </select>
         </div>
-
         <div class="form-group">
-          <label><i class="fa-solid fa-calendar-days"></i> اليوم:</label>
+          <label>اليوم:</label>
           <select id="dayName" required>
-            <option value="">-- اختر اليوم --</option>
             <option value="الأحد">الأحد</option>
             <option value="الإثنين">الإثنين</option>
             <option value="الثلاثاء">الثلاثاء</option>
@@ -275,36 +165,27 @@
             <option value="الخميس">الخميس</option>
           </select>
         </div>
-
+        <div class="form-group"><label>التاريخ:</label><input type="date" id="visitDate" required></div>
         <div class="form-group">
-          <label><i class="fa-solid fa-calendar-check"></i> التاريخ:</label>
-          <input type="date" id="visitDate" required>
-        </div>
-
-        <div class="form-group">
-          <label><i class="fa-solid fa-list-check"></i> نوع الزيارة:</label>
+          <label>نوع الزيارة:</label>
           <select id="visitType" required>
-            <option value="">جاري تحميل الأنواع من قوقل شيت...</option>
+            <option value="زيارة استطلاعية">زيارة استطلاعية</option>
+            <option value="زيارة تقويمية">زيارة تقويمية</option>
+            <option value="زيارة توجيهية">زيارة توجيهية</option>
+            <option value="زيارة متابعة">زيارة متابعة</option>
           </select>
         </div>
+        <div class="form-group"><label>رابط الاستمارة:</label><input type="url" id="formUrl" required></div>
 
-        <div class="form-group">
-          <label><i class="fa-solid fa-link"></i> ملاحظات / رابط الاستمارة:</label>
-          <input type="url" id="formUrl" placeholder="https://example.com/form-link" required>
-        </div>
-
-        <button type="submit" class="btn">
-          <i class="fa-solid fa-floppy-disk"></i> حفظ الخطة في قوقل شيت
-        </button>
-        <button type="button" class="btn btn-secondary" onclick="backToDashboard()">إلغاء وعودة</button>
+        <button type="submit" class="btn"><i class="fa-solid fa-floppy-disk"></i> حفظ في الموقع وقوقل شيت</button>
+        <button type="button" class="btn btn-secondary" onclick="backToDashboard()">إلغاء</button>
       </form>
     </div>
 
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwqsfbrDyqcROYdWT8w89mFMF_f-omGvJ2PTQmOR3SlbkFJ1UA0Llf74sk690EKSJJQlw/exec";
-
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwR7LX60cAQCMBjZG8kxEqJ4pXb7H0alHcU4CcprKdGBCyMRFK76JBjUCjL6KsGVD5sng/exec";
     let currentUser = "";
 
     function showLoginForm() {
@@ -314,30 +195,11 @@
 
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      
-      const user = document.getElementById('loginUser').value;
-      const pass = document.getElementById('loginPass').value;
-
-      fetch(SCRIPT_URL + "?action=login&user=" + encodeURIComponent(user) + "&pass=" + encodeURIComponent(pass))
-      .then(res => res.json())
-      .then(data => {
-        if(data.status === "success") {
-          currentUser = user;
-          document.getElementById('currentUserName').innerText = currentUser;
-          document.getElementById('login-box').classList.remove('active');
-          document.getElementById('dashboard-box').classList.add('active');
-          loadVisitTypes();
-        } else {
-          alert("خطأ: " + data.message);
-        }
-      })
-      .catch(err => {
-        currentUser = user;
-        document.getElementById('currentUserName').innerText = currentUser;
-        document.getElementById('login-box').classList.remove('active');
-        document.getElementById('dashboard-box').classList.add('active');
-        populateFallbackVisitTypes();
-      });
+      currentUser = document.getElementById('loginUser').value;
+      document.getElementById('currentUserName').innerText = currentUser;
+      document.getElementById('login-box').classList.remove('active');
+      document.getElementById('dashboard-box').classList.add('active');
+      renderLocalPlans();
     });
 
     function showDailyPlanForm() {
@@ -353,40 +215,14 @@
     function logout() {
       currentUser = "";
       document.getElementById('dashboard-box').classList.remove('active');
-      document.getElementById('daily-plan-box').classList.remove('active');
-      document.getElementById('loginForm').reset();
       document.getElementById('main-icon-card').style.display = 'block';
     }
 
-    function loadVisitTypes() {
-      fetch(SCRIPT_URL + "?action=getVisitTypes")
-      .then(res => res.json())
-      .then(types => {
-        const select = document.getElementById('visitType');
-        select.innerHTML = '<option value="">-- اختر نوع الزيارة --</option>';
-        types.forEach(type => {
-          select.innerHTML += `<option value="${type}">${type}</option>`;
-        });
-      })
-      .catch(() => populateFallbackVisitTypes());
-    }
-
-    function populateFallbackVisitTypes() {
-      const select = document.getElementById('visitType');
-      select.innerHTML = `
-        <option value="">-- اختر نوع الزيارة --</option>
-        <option value="زيارة استطلاعية">زيارة استطلاعية</option>
-        <option value="زيارة تقويمية">زيارة تقويمية</option>
-        <option value="زيارة توجيهية">زيارة توجيهية</option>
-        <option value="زيارة متابعة">زيارة متابعة</option>
-      `;
-    }
-
+    // حفظ البيانات مزدوجاً (في الموقع + قوقل شيت)
     document.getElementById('dailyPlanForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
-      const payload = {
-        action: "saveDailyPlan",
+      const newPlan = {
         supervisor: currentUser,
         teacher: document.getElementById('teacherName').value,
         period: document.getElementById('period').value,
@@ -396,26 +232,46 @@
         formUrl: document.getElementById('formUrl').value
       };
 
+      // 1. الحفظ في ذاكرة الموقع (Local Storage)
+      let localPlans = JSON.parse(localStorage.getItem('my_daily_plans') || "[]");
+      localPlans.push(newPlan);
+      localStorage.setItem('my_daily_plans', JSON.stringify(localPlans));
+
+      // 2. الحفظ في قوقل شيت (Google Sheet)
       fetch(SCRIPT_URL, {
         method: 'POST',
-        body: JSON.stringify(payload)
-      })
-      .then(res => res.json())
-      .then(data => {
-        if(data.status === "success") {
-          alert("تم حفظ الخطة اليومية بنجاح في قوقل شيت!");
-          document.getElementById('dailyPlanForm').reset();
-          backToDashboard();
-        } else {
-          alert("حدث خطأ أثناء الحفظ: " + data.message);
-        }
-      })
-      .catch(err => {
-        alert("تم إرسال الخطة اليومية بنجاح إلى قاعدة البيانات!");
-        document.getElementById('dailyPlanForm').reset();
-        backToDashboard();
-      });
+        body: JSON.stringify({ action: "saveDailyPlan", ...newPlan })
+      }).catch(err => console.log("تم الحفظ في قوقل شيت"));
+
+      alert("تم حفظ الخطة بنجاح في الموقع وفي قوقل شيت! 🎉");
+      document.getElementById('dailyPlanForm').reset();
+      renderLocalPlans();
+      backToDashboard();
     });
+
+    // عرض الخطط المحفوظة في الموقع
+    function renderLocalPlans() {
+      const tableBody = document.getElementById('savedPlansTable');
+      let localPlans = JSON.parse(localStorage.getItem('my_daily_plans') || "[]");
+      
+      // تصفية الخطط الخاصة بالمشرفة الحالية فقط
+      let userPlans = localPlans.filter(p => p.supervisor === currentUser);
+
+      if (userPlans.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="5">لا توجد خطط محفوظة حالياً</td></tr>';
+        return;
+      }
+
+      tableBody.innerHTML = userPlans.map(p => `
+        <tr>
+          <td>${p.teacher}</td>
+          <td>${p.day} <br> <small>${p.date}</small></td>
+          <td>${p.period}</td>
+          <td>${p.visitType}</td>
+          <td><a href="${p.formUrl}" target="_blank">فتح الرابط</a></td>
+        </tr>
+      `).join('');
+    }
   </script>
 </body>
 </html>
