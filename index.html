@@ -3,8 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>موقع المشرفة - وحدة الإشراف التربوي</title>
+  <title>منظومة المشرفة التربوية - وحدة الإشراف</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- مكتبات التصدير لإكسل و PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <style>
     :root {
       --main-color: #1a5276;
@@ -12,6 +16,8 @@
       --bg-color: #f4f6f9;
       --card-bg: #ffffff;
       --text-color: #2c3e50;
+      --success-color: #27ae60;
+      --danger-color: #c0392b;
     }
 
     * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
@@ -19,81 +25,75 @@
 
     header {
       background: linear-gradient(135deg, var(--main-color), var(--secondary-color));
-      color: white; text-align: center; padding: 30px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      color: white; text-align: center; padding: 25px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
-    header h1 { font-size: 2.2rem; margin-bottom: 8px; }
 
-    .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+    .container { max-width: 1000px; margin: 25px auto; padding: 0 15px; }
+
+    .grid-menu {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 25px;
+    }
 
     .card {
-      background: var(--card-bg); border-radius: 15px; padding: 30px; text-align: center;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s ease;
-      margin-bottom: 25px;
+      background: var(--card-bg); border-radius: 15px; padding: 25px; text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.06); cursor: pointer; transition: all 0.3s ease;
     }
-    .card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
-    .card i { font-size: 3.5rem; color: var(--secondary-color); margin-bottom: 15px; }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+    .card i { font-size: 3rem; color: var(--secondary-color); margin-bottom: 12px; }
 
     .form-box {
-      background: var(--card-bg); border-radius: 15px; padding: 30px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.08); display: none; animation: fadeIn 0.4s ease-in-out;
+      background: var(--card-bg); border-radius: 15px; padding: 25px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08); display: none; margin-bottom: 25px;
     }
-    .form-box.active { display: block; }
+    .form-box.active { display: block; animation: fadeIn 0.3s ease-in-out; }
 
     .section-header {
-      display: flex; align-items: center; gap: 12px; font-size: 1.4rem;
-      color: var(--main-color); margin-bottom: 25px; border-bottom: 2px solid #eef2f5; padding-bottom: 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      color: var(--main-color); margin-bottom: 20px; border-bottom: 2px solid #eef2f5; padding-bottom: 10px;
     }
 
-    .form-group { margin-bottom: 20px; text-align: right; }
-    .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--main-color); }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
+    .form-group { margin-bottom: 15px; text-align: right; }
+    .form-group.full-width { grid-column: 1 / -1; }
+    .form-group label { display: block; margin-bottom: 6px; font-weight: bold; color: var(--main-color); }
     .form-group select, .form-group input {
-      width: 100%; padding: 12px 15px; border: 1px solid #dcdfe6; border-radius: 10px; font-size: 1rem;
+      width: 100%; padding: 10px 12px; border: 1px solid #dcdfe6; border-radius: 8px; font-size: 0.95rem;
     }
 
+    .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
     .btn {
-      background-color: var(--main-color); color: white; padding: 13px 25px; border: none;
-      border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%;
-      display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px;
+      background-color: var(--main-color); color: white; padding: 10px 20px; border: none;
+      border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;
+      justify-content: center; flex: 1; min-width: 140px;
     }
-    .btn:hover { background-color: var(--secondary-color); }
+    .btn-success { background-color: var(--success-color); }
+    .btn-danger { background-color: var(--danger-color); }
     .btn-secondary { background-color: #7f8c8d; }
 
-    .user-info-bar {
-      background: #eaf2f8; padding: 12px 20px; border-radius: 10px; margin-bottom: 25px;
-      display: flex; justify-content: space-between; align-items: center; color: var(--main-color); font-weight: bold;
+    .user-bar {
+      background: #eaf2f8; padding: 12px 20px; border-radius: 10px; margin-bottom: 20px;
+      display: flex; justify-content: space-between; align-items: center; font-weight: bold; color: var(--main-color);
     }
 
-    .plans-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    .plans-table th, .plans-table td { border: 1px solid #ddd; padding: 10px; text-align: center; font-size: 0.95rem; }
-    .plans-table th { background-color: var(--main-color); color: white; }
-    .plans-table tr:nth-child(even) { background-color: #f9f9f9; }
+    .data-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; }
+    .data-table th, .data-table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+    .data-table th { background-color: var(--main-color); color: white; }
 
-    .loading-spinner {
-      text-align: center; padding: 20px; color: var(--secondary-color); font-weight: bold;
-    }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
 
   <header>
-    <h1><i class="fa-solid fa-user-tie"></i> موقع المشرفة</h1>
-    <p>منظومة الإشراف التربوي والخطط اليومية الحقيقية</p>
+    <h1><i class="fa-solid fa-graduation-cap"></i> موقع المشرفة التربوية</h1>
+    <p>وحدة الإشراف التربوي - المنظومة الشاملة</p>
   </header>
 
   <div class="container">
 
-    <!-- 1. أيقونة الدخول -->
-    <div id="main-icon-card" class="card" onclick="showLoginForm()">
-      <i class="fa-solid fa-graduation-cap"></i>
-      <h3>وحدة الإشراف التربوي</h3>
-      <p style="color: #7f8c8d; margin-top: 8px;">اضغط هنا لتسجيل الدخول</p>
-    </div>
-
-    <!-- 2. تسجيل الدخول -->
+    <!-- شاشة تسجيل الدخول -->
     <div id="login-box" class="form-box">
-      <div class="section-header"><i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول</div>
+      <div class="section-header"><h2><i class="fa-solid fa-lock"></i> تسجيل الدخول</h2></div>
       <form id="loginForm">
         <div class="form-group">
           <label>اسم المشرفة:</label>
@@ -109,89 +109,158 @@
           <label>كلمة المرور:</label>
           <input type="password" id="loginPass" required placeholder="أدخل كلمة المرور">
         </div>
-        <button type="submit" class="btn"><i class="fa-solid fa-arrow-right-to-bracket"></i> دخول</button>
+        <button type="submit" class="btn"><i class="fa-solid fa-right-to-bracket"></i> دخول</button>
       </form>
     </div>
 
-    <!-- 3. لوحة التحكم -->
-    <div id="dashboard-box" class="form-box">
-      <div class="user-info-bar">
-        <span>مرحباً بك: <span id="currentUserName"></span></span>
-        <button class="btn btn-secondary" style="width: auto; padding: 6px 15px;" onclick="logout()">خروج</button>
+    <!-- لوحة التحكم الرئيسية -->
+    <div id="dashboard-box" style="display: none;">
+      <div class="user-bar">
+        <span>مرحباً بكِ: <span id="currentUserName"></span></span>
+        <button class="btn btn-secondary" style="width: auto; flex: none;" onclick="logout()"><i class="fa-solid fa-power-off"></i> خروج</button>
       </div>
 
-      <div class="card" onclick="showDailyPlanForm()">
-        <i class="fa-solid fa-calendar-day"></i>
-        <h3>الخطة اليومية</h3>
-        <p style="color: #7f8c8d;">إدخال زيارة ومتابعة الخطة اليومية</p>
-      </div>
-
-      <!-- عرض الخطط من قوقل شيت مباشرة -->
-      <div style="margin-top: 30px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-          <h3 style="color: var(--main-color);"><i class="fa-solid fa-cloud"></i> جميع الخطط المسجلة في Google Sheet:</h3>
-          <button class="btn btn-secondary" style="width: auto; padding: 5px 12px; font-size: 0.85rem;" onclick="fetchPlansFromSheet()"><i class="fa-solid fa-rotate"></i> تحديث</button>
+      <div class="grid-menu">
+        <div class="card" onclick="openSection('daily-plan-box')">
+          <i class="fa-solid fa-calendar-check"></i>
+          <h3>الخطة اليومية</h3>
+          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">تسجيل الزيارات اليومية</p>
         </div>
-        
-        <div id="table-loading" class="loading-spinner" style="display: none;">
-          <i class="fa-solid fa-spinner fa-spin"></i> جاري جلب البيانات الحقيقية من قوقل شيت...
+        <div class="card" onclick="openSection('employees-box'); fetchEmployees();">
+          <i class="fa-solid fa-id-card"></i>
+          <h3>أحوال الموظفات</h3>
+          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">بيانات وتأهيل المعلمات</p>
         </div>
-
-        <table class="plans-table">
-          <thead>
-            <tr>
-              <th>المشرفة</th>
-              <th>المعلمة</th>
-              <th>اليوم / التاريخ</th>
-              <th>الفترة</th>
-              <th>نوع الزيارة</th>
-              <th>الرابط</th>
-            </tr>
-          </thead>
-          <tbody id="livePlansTable">
-            <!-- تتعبأ حقيقياً من قوقل شيت -->
-          </tbody>
-        </table>
+        <div class="card" onclick="openSection('attachments-box'); fetchAttachments();">
+          <i class="fa-solid fa-paperclip"></i>
+          <h3>المرفقات</h3>
+          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">إرفاق الاستمارات والروابط</p>
+        </div>
       </div>
     </div>
 
-    <!-- 4. نموذج الخطة -->
+    <!-- قسم الخطة اليومية -->
     <div id="daily-plan-box" class="form-box">
-      <div class="section-header"><i class="fa-solid fa-pen-to-square"></i> إضافة خطة يومية جديدة</div>
+      <div class="section-header">
+        <h2><i class="fa-solid fa-calendar-day"></i> الخطة اليومية</h2>
+        <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة</button>
+      </div>
       <form id="dailyPlanForm">
-        <div class="form-group"><label>اسم المعلمة:</label><input type="text" id="teacherName" required></div>
-        <div class="form-group">
-          <label>الفترة:</label>
-          <select id="period" required>
-            <option value="صباحي">صباحي</option>
-            <option value="مسائي">مسائي</option>
-          </select>
+        <div class="form-grid">
+          <div class="form-group"><label>اسم المعلمة:</label><input type="text" id="teacherName" required></div>
+          <div class="form-group">
+            <label>الفترة:</label>
+            <select id="period" required>
+              <option value="صباحي">صباحي</option>
+              <option value="مسائي">مسائي</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>اليوم:</label>
+            <select id="dayName" required>
+              <option value="الأحد">الأحد</option><option value="الإثنين">الإثنين</option>
+              <option value="الثلاثاء">الثلاثاء</option><option value="الأربعاء">الأربعاء</option><option value="الخميس">الخميس</option>
+            </select>
+          </div>
+          <div class="form-group"><label>التاريخ:</label><input type="date" id="visitDate" required></div>
+          <div class="form-group">
+            <label>نوع الزيارة:</label>
+            <select id="visitType" required>
+              <option value="زيارة استطلاعية">زيارة استطلاعية</option>
+              <option value="زيارة تقويمية">زيارة تقويمية</option>
+              <option value="زيارة توجيهية">زيارة توجيهية</option>
+              <option value="زيارة متابعة">زيارة متابعة</option>
+            </select>
+          </div>
+          <div class="form-group"><label>رابط الاستمارة:</label><input type="url" id="formUrl" required></div>
         </div>
-        <div class="form-group">
-          <label>اليوم:</label>
-          <select id="dayName" required>
-            <option value="الأحد">الأحد</option>
-            <option value="الإثنين">الإثنين</option>
-            <option value="الثلاثاء">الثلاثاء</option>
-            <option value="الأربعاء">الأربعاء</option>
-            <option value="الخميس">الخميس</option>
-          </select>
-        </div>
-        <div class="form-group"><label>التاريخ:</label><input type="date" id="visitDate" required></div>
-        <div class="form-group">
-          <label>نوع الزيارة:</label>
-          <select id="visitType" required>
-            <option value="زيارة استطلاعية">زيارة استطلاعية</option>
-            <option value="زيارة تقويمية">زيارة تقويمية</option>
-            <option value="زيارة توجيهية">زيارة توجيهية</option>
-            <option value="زيارة متابعة">زيارة متابعة</option>
-          </select>
-        </div>
-        <div class="form-group"><label>رابط الاستمارة:</label><input type="url" id="formUrl" required></div>
-
-        <button type="submit" id="saveBtn" class="btn"><i class="fa-solid fa-cloud-arrow-up"></i> حفظ في قوقل شيت الحقيقي</button>
-        <button type="button" class="btn btn-secondary" onclick="backToDashboard()">إلغاء</button>
+        <button type="submit" class="btn btn-success"><i class="fa-solid fa-cloud-arrow-up"></i> حفظ في قوقل شيت</button>
       </form>
+    </div>
+
+    <!-- قسم أحوال الموظفات -->
+    <div id="employees-box" class="form-box">
+      <div class="section-header">
+        <h2><i class="fa-solid fa-users"></i> أحوال الموظفات</h2>
+        <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة</button>
+      </div>
+      
+      <form id="employeeForm">
+        <div class="form-grid">
+          <div class="form-group"><label>اسم المعلمة:</label><input type="text" id="empName" required></div>
+          <div class="form-group">
+            <label>المؤهل العلمي:</label>
+            <select id="empDegree" required>
+              <option value="ثانوي">ثانوي</option>
+              <option value="دبلوم">دبلوم</option>
+              <option value="بكالوريوس">بكالوريوس</option>
+              <option value="ماجستير">ماجستير</option>
+              <option value="دكتوراه">دكتوراه</option>
+            </select>
+          </div>
+          <div class="form-group"><label>المؤهل في القرآن:</label><input type="text" id="quranDegree" placeholder="مثال: خاتمة / 15 جزء" required></div>
+          <div class="form-group">
+            <label>الفئة التي تدرسها:</label>
+            <select id="empCategory" required>
+              <option value="ناشئة">ناشئة</option>
+              <option value="أمهات">أمهات</option>
+              <option value="متعلمات">متعلمات</option>
+            </select>
+          </div>
+          <div class="form-group"><label>عدد الدورات:</label><input type="number" id="empCourses" value="0" min="0"></div>
+          <div class="form-group"><label>الجنسية:</label><input type="text" id="empNationality" required></div>
+          <div class="form-group"><label>رقم الهاتف:</label><input type="tel" id="empPhone" required></div>
+        </div>
+
+        <div class="btn-group">
+          <button type="button" class="btn" onclick="saveDraft()"><i class="fa-solid fa-bookmark"></i> حفظ مسودة محلياً</button>
+          <button type="submit" class="btn btn-success"><i class="fa-solid fa-cloud-arrow-up"></i> حفظ في قوقل شيت</button>
+        </div>
+      </form>
+
+      <hr style="margin:25px 0;">
+
+      <!-- جدول وإمكانية التصدير -->
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3>قائمة الموظفات المسجلة:</h3>
+        <div class="btn-group" style="margin:0; flex:none;">
+          <button class="btn btn-secondary" style="padding: 5px 10px;" onclick="exportExcel()"><i class="fa-solid fa-file-excel"></i> تصدير إكسل</button>
+        </div>
+      </div>
+
+      <table class="data-table" id="empTable">
+        <thead>
+          <tr>
+            <th>اسم المعلمة</th><th>المؤهل</th><th>مؤهل القرآن</th><th>الفئة</th><th>الدورات</th><th>الجنسية</th><th>الهاتف</th><th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="empTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- قسم المرفقات -->
+    <div id="attachments-box" class="form-box">
+      <div class="section-header">
+        <h2><i class="fa-solid fa-folder-open"></i> المرفقات والروابط</h2>
+        <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة</button>
+      </div>
+
+      <form id="attachForm">
+        <div class="form-grid">
+          <div class="form-group"><label>عنوان المرفق:</label><input type="text" id="attachTitle" required placeholder="مثال: استمارة تقييم شهر أكتوبر"></div>
+          <div class="form-group full-width"><label>رابط المرفق / الملف:</label><input type="url" id="attachUrl" required placeholder="ضع رابط Google Drive / OneDrive"></div>
+        </div>
+        <button type="submit" class="btn btn-success"><i class="fa-solid fa-upload"></i> إضافة المرفق</button>
+      </form>
+
+      <hr style="margin:20px 0;">
+
+      <table class="data-table">
+        <thead>
+          <tr><th>عنوان المرفق</th><th>المشرفة</th><th>الرابط</th><th>حذف</th></tr>
+        </thead>
+        <tbody id="attachTableBody"></tbody>
+      </table>
     </div>
 
   </div>
@@ -200,109 +269,157 @@
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwMn4j5HPrhln8zhJU9MwAlJOnl-iUmWwcQnKry97cl7N7MBykfnu92_dS1szzqhLEyAw/exec";
     let currentUser = "";
 
-    function showLoginForm() {
-      document.getElementById('main-icon-card').style.display = 'none';
-      document.getElementById('login-box').classList.add('active');
-    }
+    // 1. حل مشكلة الخروج عند تحديث الصفحة (Auto-login session)
+    window.onload = function() {
+      const savedUser = sessionStorage.getItem('supervisor_user');
+      if (savedUser) {
+        currentUser = savedUser;
+        document.getElementById('currentUserName').innerText = currentUser;
+        document.getElementById('login-box').style.display = 'none';
+        document.getElementById('dashboard-box').style.display = 'block';
+      } else {
+        document.getElementById('login-box').classList.add('active');
+      }
+      loadDraft();
+    };
 
+    // تسجيل الدخول
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
       currentUser = document.getElementById('loginUser').value;
+      sessionStorage.setItem('supervisor_user', currentUser); // حفظ الجلسة
       document.getElementById('currentUserName').innerText = currentUser;
-      document.getElementById('login-box').classList.remove('active');
-      document.getElementById('dashboard-box').classList.add('active');
-      fetchPlansFromSheet();
+      document.getElementById('login-box').style.display = 'none';
+      document.getElementById('dashboard-box').style.display = 'block';
     });
 
-    function showDailyPlanForm() {
-      document.getElementById('dashboard-box').classList.remove('active');
-      document.getElementById('daily-plan-box').classList.add('active');
+    function logout() {
+      sessionStorage.removeItem('supervisor_user');
+      location.reload();
+    }
+
+    function openSection(id) {
+      document.getElementById('dashboard-box').style.display = 'none';
+      document.querySelectorAll('.form-box').forEach(box => box.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
     }
 
     function backToDashboard() {
-      document.getElementById('daily-plan-box').classList.remove('active');
-      document.getElementById('dashboard-box').classList.add('active');
+      document.querySelectorAll('.form-box').forEach(box => box.classList.remove('active'));
+      document.getElementById('dashboard-box').style.display = 'block';
     }
 
-    function logout() {
-      currentUser = "";
-      document.getElementById('dashboard-box').classList.remove('active');
-      document.getElementById('main-icon-card').style.display = 'block';
+    // --- أحوال الموظفات: المسودة والمزامنة ---
+    function saveDraft() {
+      const draft = {
+        teacher: document.getElementById('empName').value,
+        degree: document.getElementById('empDegree').value,
+        quranDegree: document.getElementById('quranDegree').value,
+        category: document.getElementById('empCategory').value,
+        courses: document.getElementById('empCourses').value,
+        nationality: document.getElementById('empNationality').value,
+        phone: document.getElementById('empPhone').value
+      };
+      localStorage.setItem('emp_draft', JSON.stringify(draft));
+      alert('📝 تم حفظ البيانات كمسودة محلياً في جهازك!');
     }
 
-    // حفظ حقيقي في قوقل شيت حصراً (بدون أي تخزين محلي على الجهاز)
-    document.getElementById('dailyPlanForm').addEventListener('submit', function(e) {
+    function loadDraft() {
+      const draft = JSON.parse(localStorage.getItem('emp_draft') || "null");
+      if (draft) {
+        document.getElementById('empName').value = draft.teacher || '';
+        document.getElementById('empDegree').value = draft.degree || 'بكالوريوس';
+        document.getElementById('quranDegree').value = draft.quranDegree || '';
+        document.getElementById('empCategory').value = draft.category || 'ناشئة';
+        document.getElementById('empCourses').value = draft.courses || '0';
+        document.getElementById('empNationality').value = draft.nationality || '';
+        document.getElementById('empPhone').value = draft.phone || '';
+      }
+    }
+
+    // حفظ الموظفة في قوقل شيت
+    document.getElementById('employeeForm').addEventListener('submit', function(e) {
       e.preventDefault();
-
-      const saveBtn = document.getElementById('saveBtn');
-      saveBtn.disabled = true;
-      saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الحفظ في قوقل شيت...';
-
       const payload = {
-        action: "saveDailyPlan",
-        supervisor: currentUser,
-        teacher: document.getElementById('teacherName').value,
-        period: document.getElementById('period').value,
-        day: document.getElementById('dayName').value,
-        date: document.getElementById('visitDate').value,
-        visitType: document.getElementById('visitType').value,
-        formUrl: document.getElementById('formUrl').value
+        action: "saveEmployee", supervisor: currentUser,
+        teacher: document.getElementById('empName').value,
+        degree: document.getElementById('empDegree').value,
+        quranDegree: document.getElementById('quranDegree').value,
+        category: document.getElementById('empCategory').value,
+        courses: document.getElementById('empCourses').value,
+        nationality: document.getElementById('empNationality').value,
+        phone: document.getElementById('empPhone').value
       };
 
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify(payload)
-      })
-      .then(res => res.json())
-      .then(data => {
-        alert("✅ تم الحفظ بنجاح في Google Sheet الخاص بكِ!");
-        document.getElementById('dailyPlanForm').reset();
-        saveBtn.disabled = false;
-        saveBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> حفظ في قوقل شيت الحقيقي';
-        backToDashboard();
-        fetchPlansFromSheet();
-      })
-      .catch(err => {
-        alert("✅ تم إرسال البيانات بنجاح لقوقل شيت!");
-        document.getElementById('dailyPlanForm').reset();
-        saveBtn.disabled = false;
-        saveBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> حفظ في قوقل شيت الحقيقي';
-        backToDashboard();
-        fetchPlansFromSheet();
+      fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
+      .then(() => {
+        alert('✅ تم حفظ بيانات الموظفة بنجاح في Google Sheet!');
+        localStorage.removeItem('emp_draft');
+        document.getElementById('employeeForm').reset();
+        fetchEmployees();
       });
     });
 
-    // جلب حقيقي وحي للبيانات من قوقل شيت
-    function fetchPlansFromSheet() {
-      const loading = document.getElementById('table-loading');
-      const tableBody = document.getElementById('livePlansTable');
-      
-      loading.style.display = 'block';
-      tableBody.innerHTML = '';
-
-      fetch(SCRIPT_URL + "?action=getDailyPlans")
+    function fetchEmployees() {
+      fetch(SCRIPT_URL + "?action=getEmployees")
       .then(res => res.json())
-      .then(plans => {
-        loading.style.display = 'none';
-        if (!plans || plans.length === 0) {
-          tableBody.innerHTML = '<tr><td colspan="6">لا توجد خطط مسجلة حتى الآن في قوقل شيت</td></tr>';
-          return;
-        }
-
-        tableBody.innerHTML = plans.map(p => `
+      .then(data => {
+        const tbody = document.getElementById('empTableBody');
+        tbody.innerHTML = data.map((e, index) => `
           <tr>
-            <td><b>${p.supervisor || '-'}</b></td>
-            <td>${p.teacher || '-'}</td>
-            <td>${p.day || ''} <br> <small style="color:#7f8c8d;">${p.date || ''}</small></td>
-            <td>${p.period || '-'}</td>
-            <td>${p.visitType || '-'}</td>
-            <td><a href="${p.formUrl}" target="_blank" style="color:#2980b9; font-weight:bold;">عرض الاستمارة</a></td>
+            <td>${e.teacher}</td><td>${e.degree}</td><td>${e.quranDegree}</td><td>${e.category}</td>
+            <td>${e.courses}</td><td>${e.nationality}</td><td>${e.phone}</td>
+            <td>
+              <button class="btn btn-danger" style="padding:2px 8px; font-size:0.75rem;" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></button>
+            </td>
           </tr>
         `).join('');
-      })
-      .catch(err => {
-        loading.style.display = 'none';
-        tableBody.innerHTML = '<tr><td colspan="6" style="color:red;">تأكدي من صلاحيات السكريبت (Anyone) في قوقل شيت لارسال وقراءة البيانات مباشرة.</td></tr>';
+      });
+    }
+
+    function deleteRow(btn) {
+      if (confirm("هل أجهزة متأكدة من حذف هذا السجل محلياً؟ (يمكنكِ تعديله/حذفه نهائياً مباشرة من ملف قوقل شيت)")) {
+        btn.closest('tr').remove();
+      }
+    }
+
+    // تصدير لإكسل
+    function exportExcel() {
+      var table = document.getElementById("empTable");
+      var wb = XLSX.utils.table_to_book(table, {sheet: "الموظفات"});
+      XLSX.writeFile(wb, "احوال_الموظفات.xlsx");
+    }
+
+    // --- المرفقات ---
+    document.getElementById('attachForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const payload = {
+        action: "saveAttachment", supervisor: currentUser,
+        title: document.getElementById('attachTitle').value,
+        url: document.getElementById('attachUrl').value
+      };
+
+      fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
+      .then(() => {
+        alert('✅ تم إضافة المرفق بنجاح!');
+        document.getElementById('attachForm').reset();
+        fetchAttachments();
+      });
+    });
+
+    function fetchAttachments() {
+      fetch(SCRIPT_URL + "?action=getAttachments")
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById('attachTableBody');
+        tbody.innerHTML = data.map(a => `
+          <tr>
+            <td><b>${a.title}</b></td>
+            <td>${a.supervisor}</td>
+            <td><a href="${a.url}" target="_blank" style="color:var(--secondary-color); font-weight:bold;">عرض الملف</a></td>
+            <td><button class="btn btn-danger" style="padding:2px 8px; font-size:0.75rem;" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></button></td>
+          </tr>
+        `).join('');
       });
     }
   </script>
