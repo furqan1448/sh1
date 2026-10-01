@@ -303,8 +303,7 @@
   </div>
 
   <script>
-    // ضع رابط Web App الخاص بـ Apps Script هنا
-    const SCRIPT_URL = "استبدل_هذا_الرابط_برابط_WEB_APP_من_قوقل_شيت";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxrgnOlEjY-8thiUpWqJF2zHPsTZqA0cNH-bv9ZAhs3z4inYD9n3sJ-L4x7e5AwLieJYg/exec";
 
     let currentUser = "";
 
@@ -319,7 +318,6 @@
       const user = document.getElementById('loginUser').value;
       const pass = document.getElementById('loginPass').value;
 
-      // إرسال طلب تحقق من كلمة المرور لـ Google Apps Script
       fetch(SCRIPT_URL + "?action=login&user=" + encodeURIComponent(user) + "&pass=" + encodeURIComponent(pass))
       .then(res => res.json())
       .then(data => {
@@ -328,13 +326,12 @@
           document.getElementById('currentUserName').innerText = currentUser;
           document.getElementById('login-box').classList.remove('active');
           document.getElementById('dashboard-box').classList.add('active');
-          loadVisitTypes(); // تحميل قائمة أنواع الزيارة تلقائياً من الشيت
+          loadVisitTypes();
         } else {
           alert("خطأ: " + data.message);
         }
       })
       .catch(err => {
-        // في حالة التجربة بدون سكريبت مباشر
         currentUser = user;
         document.getElementById('currentUserName').innerText = currentUser;
         document.getElementById('login-box').classList.remove('active');
@@ -361,7 +358,6 @@
       document.getElementById('main-icon-card').style.display = 'block';
     }
 
-    // جلب أنواع الزيارة من ورقة VisitTypes في قوقل شيت
     function loadVisitTypes() {
       fetch(SCRIPT_URL + "?action=getVisitTypes")
       .then(res => res.json())
@@ -386,7 +382,6 @@
       `;
     }
 
-    // حفظ الخطة اليومية
     document.getElementById('dailyPlanForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
