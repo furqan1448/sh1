@@ -60,6 +60,11 @@
       width: 100%; padding: 10px 12px; border: 1px solid #dcdfe6; border-radius: 8px; font-size: 0.95rem;
     }
 
+    .checkbox-group {
+      display: flex; gap: 15px; flex-wrap: wrap; background: #fff; padding: 10px; border: 1px solid #dcdfe6; border-radius: 8px;
+    }
+    .checkbox-group label { font-weight: normal; margin-bottom: 0; cursor: pointer; color: var(--text-color); }
+
     .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
     .btn {
       background-color: var(--main-color); color: white; padding: 10px 20px; border: none;
@@ -82,6 +87,7 @@
     .data-table th.admin-th { background-color: var(--admin-color); }
 
     .badge-admin { background: var(--admin-color); color: white; padding: 3px 8px; border-radius: 5px; font-size: 0.8rem; }
+    .target-tag { background: #e8daef; color: var(--admin-color); padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
@@ -130,7 +136,7 @@
         <div id="adminMenuCard" class="card admin-card" style="display:none;" onclick="openSection('admin-control-box'); fetchAllDataForAdmin();">
           <i class="fa-solid fa-user-shield"></i>
           <h3>لوحة الإدارة المتحكمة</h3>
-          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">متابعة جميع أعمال المشرفات وإضافة النماذج</p>
+          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">متابعة جميع أعمال المشرفات وإضافة النماذج الموجهة</p>
         </div>
 
         <div class="card" onclick="openSection('daily-plan-box')">
@@ -149,7 +155,7 @@
         <div class="card" onclick="openSection('forms-box'); fetchAdminForms();">
           <i class="fa-solid fa-file-signature"></i>
           <h3>نماذج المشرفة</h3>
-          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">النماذج والاستمارات المعتمدة من الإدارة</p>
+          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">النماذج والاستمارات الموجهة لكِ من الإدارة</p>
         </div>
 
         <div class="card" onclick="openSection('attachments-box'); fetchAttachments();">
@@ -167,16 +173,37 @@
         <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة</button>
       </div>
 
-      <!-- إضافة نموذج جديد من الإدارة -->
+      <!-- إضافة نموذج جديد من الإدارة مع تخصيص الموجه إليهن -->
       <div style="background:#f9f4fc; padding:18px; border-radius:10px; border:1px solid #e1d5e7; margin-bottom:25px;">
-        <h3 style="color:var(--admin-color); margin-bottom:12px;"><i class="fa-solid fa-plus-circle"></i> إضافة نموذج/استمارة جديدة للمشرفات:</h3>
+        <h3 style="color:var(--admin-color); margin-bottom:12px;"><i class="fa-solid fa-plus-circle"></i> إضافة ونشر نموذج/استمارة جديدة:</h3>
         <form id="addAdminForm">
           <div class="form-grid">
             <div class="form-group"><label>عنوان النموذج:</label><input type="text" id="formTitle" placeholder="مثال: استمارة زيارة تقويمية 2026" required></div>
             <div class="form-group"><label>وصف مختصر:</label><input type="text" id="formDesc" placeholder="توجيهات أو تعليمات حول النموذج"></div>
             <div class="form-group full-width"><label>رابط النموذج (Google Forms / Drive / Word):</label><input type="url" id="formLink" placeholder="https://..." required></div>
+            
+            <!-- خيار الموجه إليهم -->
+            <div class="form-group full-width">
+              <label>إرسال النموذج إلى:</label>
+              <select id="targetType" onchange="toggleSupervisorList()" required>
+                <option value="الجميع">جميع المشرفات</option>
+                <option value="محدد">مشرفات محددات</option>
+              </select>
+            </div>
+
+            <!-- قائمة الأسماء عند اختيار "مشرفات محددات" -->
+            <div class="form-group full-width" id="supervisorsSelectContainer" style="display:none;">
+              <label>اختر المشرفات المستهدفات:</label>
+              <div class="checkbox-group">
+                <label><input type="checkbox" class="supervisor-chk" value="فاطمة الطلحي"> فاطمة الطلحي</label>
+                <label><input type="checkbox" class="supervisor-chk" value="فاطمة الثمالي"> فاطمة الثمالي</label>
+                <label><input type="checkbox" class="supervisor-chk" value="مريم بالبيد"> مريم بالبيد</label>
+                <label><input type="checkbox" class="supervisor-chk" value="مستورة الخديدي"> مستورة الخديدي</label>
+              </div>
+            </div>
+
           </div>
-          <button type="submit" class="btn btn-admin"><i class="fa-solid fa-paper-plane"></i> نشر النموذج للمشرفات</button>
+          <button type="submit" class="btn btn-admin"><i class="fa-solid fa-paper-plane"></i> نشر النموذج</button>
         </form>
       </div>
 
@@ -197,19 +224,20 @@
       </table>
     </div>
 
-    <!-- 2. قسم نماذج المشرفة (تستعرض فيه المشرفة النماذج المضافة من الإدارة) -->
+    <!-- 2. قسم نماذج المشرفة (تستعرض فيه المشرفة النماذج الموجهة لها خصيصاً أو للجميع) -->
     <div id="forms-box" class="form-box">
       <div class="section-header">
         <h2><i class="fa-solid fa-file-signature"></i> نماذج واستمارات المشرفة</h2>
         <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة</button>
       </div>
-      <p style="color:#7f8c8d; margin-bottom:15px;">النماذج الرسمية المعتمدة من الإدارة للعمل بها:</p>
+      <p style="color:#7f8c8d; margin-bottom:15px;">النماذج والاستمارات الموجهة لكِ رسمياً من الإدارة للعمل بها:</p>
 
       <table class="data-table">
         <thead>
           <tr>
             <th>عنوان النموذج</th>
             <th>التعليمات والوصف</th>
+            <th>المستهدفون</th>
             <th>تاريخ الإضافة</th>
             <th>رابط الفتح/التحميل</th>
           </tr>
@@ -391,20 +419,41 @@
       document.getElementById('dashboard-box').style.display = 'block';
     }
 
+    // إظهار وإخفاء قائمة الأسماء حسب الاختيار
+    function toggleSupervisorList() {
+      const targetType = document.getElementById('targetType').value;
+      document.getElementById('supervisorsSelectContainer').style.display = (targetType === 'محدد') ? 'block' : 'none';
+    }
+
     // --- وظائف الإدارة المتحكمة ---
     document.getElementById('addAdminForm').addEventListener('submit', function(e) {
       e.preventDefault();
+      
+      const targetType = document.getElementById('targetType').value;
+      let targetSupervisors = "الجميع";
+
+      if (targetType === "محدد") {
+        const selectedArr = Array.from(document.querySelectorAll('.supervisor-chk:checked')).map(cb => cb.value);
+        if (selectedArr.length === 0) {
+          alert("الرجاء اختيار مشرفة واحدة على الأقل!");
+          return;
+        }
+        targetSupervisors = selectedArr.join(", ");
+      }
+
       const payload = {
         action: "saveAdminForm",
         title: document.getElementById('formTitle').value,
         description: document.getElementById('formDesc').value,
-        url: document.getElementById('formLink').value
+        url: document.getElementById('formLink').value,
+        targetSupervisors: targetSupervisors
       };
 
       fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
       .then(() => {
-        alert('👑 تم نشر النموذج بنجاح لجميع المشرفات!');
+        alert('👑 تم نشر النموذج بنجاح بالصلاحيات المحددة!');
         document.getElementById('addAdminForm').reset();
+        document.getElementById('supervisorsSelectContainer').style.display = 'none';
       });
     });
 
@@ -426,20 +475,34 @@
       });
     }
 
-    // --- وظائف نماذج المشرفة ---
+    // --- وظائف نماذج المشرفة (تصفية النموذج بناءً على اسم المشرفة المسجلة دخول) ---
     function fetchAdminForms() {
       fetch(SCRIPT_URL + "?action=getAdminForms")
       .then(res => res.json())
       .then(data => {
         const tbody = document.getElementById('supervisorFormsTable');
         if(!data || data.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="4">لا توجد نماذج مضافة من الإدارة حالياً</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="5">لا توجد نماذج مضافة من الإدارة حالياً</td></tr>';
           return;
         }
-        tbody.innerHTML = data.map(f => `
+
+        // تصفية النماذج: تظهر إذا كانت للجميع أو إذا كان اسم المشرفة ضمن المستهدفين (أو إذا كانت الإدارة نفسها)
+        const visibleForms = data.filter(f => {
+          if (isAdmin) return true;
+          if (!f.targetSupervisors || f.targetSupervisors === "الجميع") return true;
+          return f.targetSupervisors.includes(currentUser);
+        });
+
+        if (visibleForms.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5">لا توجد نماذج موجهة لكِ حالياً</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = visibleForms.map(f => `
           <tr>
             <td><b>${f.title}</b></td>
             <td>${f.description || 'لا يوجد وصف'}</td>
+            <td><span class="target-tag">${f.targetSupervisors || 'الجميع'}</span></td>
             <td><small>${f.timestamp || '-'}</small></td>
             <td><a href="${f.url}" target="_blank" class="btn btn-admin" style="display:inline-flex; padding:4px 12px; font-size:0.85rem;"><i class="fa-solid fa-arrow-up-right-from-square"></i> فتح النموذج</a></td>
           </tr>

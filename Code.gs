@@ -1,5 +1,5 @@
 // ================= ================= =================
-// سكريبت الإدارة والإشراف المتكامل مع النماذج
+// سكريبت الإدارة والإشراف المتكامل مع تخصيص المستهدفين بالنماذج
 // ================= ================= =================
 
 function setupDatabase() {
@@ -38,11 +38,11 @@ function setupDatabase() {
     attachSheet.appendRow(["تاريخ التسجيل", "المشرفة", "عنوان المرفق", "رابط المرفق"]);
   }
 
-  // 5. نماذج الإدارة للمشرفات (Admin Forms)
+  // 5. نماذج الإدارة للمشرفات (AdminForms)
   var adminFormsSheet = ss.getSheetByName("AdminForms");
   if (!adminFormsSheet) {
     adminFormsSheet = ss.insertSheet("AdminForms");
-    adminFormsSheet.appendRow(["تاريخ النشر", "عنوان النموذج", "وصف النموذج", "رابط النموذج"]);
+    adminFormsSheet.appendRow(["تاريخ النشر", "عنوان النموذج", "وصف النموذج", "رابط النموذج", "المستهدفون"]);
   }
 
   var defaultSheet = ss.getSheetByName("Sheet1") || ss.getSheetByName("ورقة1");
@@ -105,7 +105,13 @@ function doGet(e) {
     var forms = [];
     for (var i = 1; i < data.length; i++) {
       if (data[i][1]) {
-        forms.push({ timestamp: data[i][0], title: data[i][1], description: data[i][2], url: data[i][3] });
+        forms.push({ 
+          timestamp: data[i][0], 
+          title: data[i][1], 
+          description: data[i][2], 
+          url: data[i][3],
+          targetSupervisors: data[i][4] || "الجميع"
+        });
       }
     }
     return ContentService.createTextOutput(JSON.stringify(forms.reverse())).setMimeType(ContentService.MimeType.JSON);
@@ -137,7 +143,7 @@ function doPost(e) {
 
   if (data.action == "saveAdminForm") {
     var sheet = ss.getSheetByName("AdminForms");
-    sheet.appendRow([new Date().toLocaleString('ar-SA'), data.title, data.description, data.url]);
+    sheet.appendRow([new Date().toLocaleString('ar-SA'), data.title, data.description, data.url, data.targetSupervisors]);
     return ContentService.createTextOutput(JSON.stringify({"status": "success"})).setMimeType(ContentService.MimeType.JSON);
   }
 }
