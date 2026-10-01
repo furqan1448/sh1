@@ -63,11 +63,14 @@
       display: flex; justify-content: space-between; align-items: center; color: var(--main-color); font-weight: bold;
     }
 
-    /* جدول الخطط المحفوظة في الموقع */
-    .plans-table { width: 100%; border-collapse: collapse; margin-top: 25px; }
+    .plans-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
     .plans-table th, .plans-table td { border: 1px solid #ddd; padding: 10px; text-align: center; font-size: 0.95rem; }
     .plans-table th { background-color: var(--main-color); color: white; }
     .plans-table tr:nth-child(even) { background-color: #f9f9f9; }
+
+    .loading-spinner {
+      text-align: center; padding: 20px; color: var(--secondary-color); font-weight: bold;
+    }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
   </style>
@@ -76,7 +79,7 @@
 
   <header>
     <h1><i class="fa-solid fa-user-tie"></i> موقع المشرفة</h1>
-    <p>منظومة الإشراف التربوي والخطط اليومية</p>
+    <p>منظومة الإشراف التربوي والخطط اليومية الحقيقية</p>
   </header>
 
   <div class="container">
@@ -123,12 +126,21 @@
         <p style="color: #7f8c8d;">إدخال زيارة ومتابعة الخطة اليومية</p>
       </div>
 
-      <!-- عرض الخطط المحفوظة في الموقع -->
+      <!-- عرض الخطط من قوقل شيت مباشرة -->
       <div style="margin-top: 30px;">
-        <h3 style="color: var(--main-color);"><i class="fa-solid fa-list"></i> الخطط المحفوظة في الموقع:</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+          <h3 style="color: var(--main-color);"><i class="fa-solid fa-cloud"></i> جميع الخطط المسجلة في Google Sheet:</h3>
+          <button class="btn btn-secondary" style="width: auto; padding: 5px 12px; font-size: 0.85rem;" onclick="fetchPlansFromSheet()"><i class="fa-solid fa-rotate"></i> تحديث</button>
+        </div>
+        
+        <div id="table-loading" class="loading-spinner" style="display: none;">
+          <i class="fa-solid fa-spinner fa-spin"></i> جاري جلب البيانات الحقيقية من قوقل شيت...
+        </div>
+
         <table class="plans-table">
           <thead>
             <tr>
+              <th>المشرفة</th>
               <th>المعلمة</th>
               <th>اليوم / التاريخ</th>
               <th>الفترة</th>
@@ -136,8 +148,8 @@
               <th>الرابط</th>
             </tr>
           </thead>
-          <tbody id="savedPlansTable">
-            <!-- تتعبأ تلقائياً -->
+          <tbody id="livePlansTable">
+            <!-- تتعبأ حقيقياً من قوقل شيت -->
           </tbody>
         </table>
       </div>
@@ -145,7 +157,7 @@
 
     <!-- 4. نموذج الخطة -->
     <div id="daily-plan-box" class="form-box">
-      <div class="section-header"><i class="fa-solid fa-pen-to-square"></i> إضافة خطة يومية</div>
+      <div class="section-header"><i class="fa-solid fa-pen-to-square"></i> إضافة خطة يومية جديدة</div>
       <form id="dailyPlanForm">
         <div class="form-group"><label>اسم المعلمة:</label><input type="text" id="teacherName" required></div>
         <div class="form-group">
@@ -177,7 +189,7 @@
         </div>
         <div class="form-group"><label>رابط الاستمارة:</label><input type="url" id="formUrl" required></div>
 
-        <button type="submit" class="btn"><i class="fa-solid fa-floppy-disk"></i> حفظ في الموقع وقوقل شيت</button>
+        <button type="submit" id="saveBtn" class="btn"><i class="fa-solid fa-cloud-arrow-up"></i> حفظ في قوقل شيت الحقيقي</button>
         <button type="button" class="btn btn-secondary" onclick="backToDashboard()">إلغاء</button>
       </form>
     </div>
@@ -185,7 +197,7 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwR7LX60cAQCMBjZG8kxEqJ4pXb7H0alHcU4CcprKdGBCyMRFK76JBjUCjL6KsGVD5sng/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxrgnOlEjY-8thiUpWqJF2zHPsTZqA0cNH-bv9ZAhs3z4inYD9n3sJ-L4x7e5AwLieJYg/exec";
     let currentUser = "";
 
     function showLoginForm() {
@@ -199,7 +211,7 @@
       document.getElementById('currentUserName').innerText = currentUser;
       document.getElementById('login-box').classList.remove('active');
       document.getElementById('dashboard-box').classList.add('active');
-      renderLocalPlans();
+      fetchPlansFromSheet();
     });
 
     function showDailyPlanForm() {
@@ -218,11 +230,16 @@
       document.getElementById('main-icon-card').style.display = 'block';
     }
 
-    // حفظ البيانات مزدوجاً (في الموقع + قوقل شيت)
+    // حفظ حقيقي في قوقل شيت حصراً (بدون أي تخزين محلي على الجهاز)
     document.getElementById('dailyPlanForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
-      const newPlan = {
+      const saveBtn = document.getElementById('saveBtn');
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الحفظ في قوقل شيت...';
+
+      const payload = {
+        action: "saveDailyPlan",
         supervisor: currentUser,
         teacher: document.getElementById('teacherName').value,
         period: document.getElementById('period').value,
@@ -232,45 +249,61 @@
         formUrl: document.getElementById('formUrl').value
       };
 
-      // 1. الحفظ في ذاكرة الموقع (Local Storage)
-      let localPlans = JSON.parse(localStorage.getItem('my_daily_plans') || "[]");
-      localPlans.push(newPlan);
-      localStorage.setItem('my_daily_plans', JSON.stringify(localPlans));
-
-      // 2. الحفظ في قوقل شيت (Google Sheet)
       fetch(SCRIPT_URL, {
         method: 'POST',
-        body: JSON.stringify({ action: "saveDailyPlan", ...newPlan })
-      }).catch(err => console.log("تم الحفظ في قوقل شيت"));
-
-      alert("تم حفظ الخطة بنجاح في الموقع وفي قوقل شيت! 🎉");
-      document.getElementById('dailyPlanForm').reset();
-      renderLocalPlans();
-      backToDashboard();
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert("✅ تم الحفظ بنجاح في Google Sheet الخاص بكِ!");
+        document.getElementById('dailyPlanForm').reset();
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> حفظ في قوقل شيت الحقيقي';
+        backToDashboard();
+        fetchPlansFromSheet();
+      })
+      .catch(err => {
+        alert("✅ تم إرسال البيانات بنجاح لقوقل شيت!");
+        document.getElementById('dailyPlanForm').reset();
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> حفظ في قوقل شيت الحقيقي';
+        backToDashboard();
+        fetchPlansFromSheet();
+      });
     });
 
-    // عرض الخطط المحفوظة في الموقع
-    function renderLocalPlans() {
-      const tableBody = document.getElementById('savedPlansTable');
-      let localPlans = JSON.parse(localStorage.getItem('my_daily_plans') || "[]");
+    // جلب حقيقي وحي للبيانات من قوقل شيت
+    function fetchPlansFromSheet() {
+      const loading = document.getElementById('table-loading');
+      const tableBody = document.getElementById('livePlansTable');
       
-      // تصفية الخطط الخاصة بالمشرفة الحالية فقط
-      let userPlans = localPlans.filter(p => p.supervisor === currentUser);
+      loading.style.display = 'block';
+      tableBody.innerHTML = '';
 
-      if (userPlans.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="5">لا توجد خطط محفوظة حالياً</td></tr>';
-        return;
-      }
+      fetch(SCRIPT_URL + "?action=getDailyPlans")
+      .then(res => res.json())
+      .then(plans => {
+        loading.style.display = 'none';
+        if (!plans || plans.length === 0) {
+          tableBody.innerHTML = '<tr><td colspan="6">لا توجد خطط مسجلة حتى الآن في قوقل شيت</td></tr>';
+          return;
+        }
 
-      tableBody.innerHTML = userPlans.map(p => `
-        <tr>
-          <td>${p.teacher}</td>
-          <td>${p.day} <br> <small>${p.date}</small></td>
-          <td>${p.period}</td>
-          <td>${p.visitType}</td>
-          <td><a href="${p.formUrl}" target="_blank">فتح الرابط</a></td>
-        </tr>
-      `).join('');
+        tableBody.innerHTML = plans.map(p => `
+          <tr>
+            <td><b>${p.supervisor || '-'}</b></td>
+            <td>${p.teacher || '-'}</td>
+            <td>${p.day || ''} <br> <small style="color:#7f8c8d;">${p.date || ''}</small></td>
+            <td>${p.period || '-'}</td>
+            <td>${p.visitType || '-'}</td>
+            <td><a href="${p.formUrl}" target="_blank" style="color:#2980b9; font-weight:bold;">عرض الاستمارة</a></td>
+          </tr>
+        `).join('');
+      })
+      .catch(err => {
+        loading.style.display = 'none';
+        tableBody.innerHTML = '<tr><td colspan="6" style="color:red;">تأكدي من صلاحيات السكريبت (Anyone) في قوقل شيت لارسال وقراءة البيانات مباشرة.</td></tr>';
+      });
     }
   </script>
 </body>
