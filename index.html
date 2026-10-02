@@ -61,20 +61,11 @@
       width: 100%; padding: 10px 12px; border: 1px solid #dcdfe6; border-radius: 8px; font-size: 0.95rem;
     }
 
-    .checkbox-group {
-      display: flex; gap: 15px; flex-wrap: wrap; background: #fff; padding: 10px; border: 1px solid #dcdfe6; border-radius: 8px;
-    }
-    .checkbox-group label { font-weight: normal; margin-bottom: 0; cursor: pointer; color: var(--text-color); }
-
-    .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
     .btn {
       background-color: var(--main-color); color: white; padding: 10px 20px; border: none;
       border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;
       justify-content: center; flex: 1; min-width: 140px;
     }
-    .btn-admin { background-color: var(--admin-color); }
-    .btn-success { background-color: var(--success-color); }
-    .btn-danger { background-color: var(--danger-color); }
     .btn-secondary { background-color: #7f8c8d; }
     .btn-warning { background-color: #e67e22; }
 
@@ -86,20 +77,13 @@
     .data-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; }
     .data-table th, .data-table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
     .data-table th { background-color: var(--main-color); color: white; }
-    .data-table th.admin-th { background-color: var(--admin-color); }
-
-    .badge-admin { background: var(--admin-color); color: white; padding: 3px 8px; border-radius: 5px; font-size: 0.8rem; }
-    .target-tag { background: #e8daef; color: var(--admin-color); padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
 
     .score-summary {
       background: #fef9e7; border: 1px solid #f9e79f; padding: 15px; border-radius: 10px;
-      margin: 15px 0; text-align: center; font-weight: bold; color: #7d6608; font-size: 1.1rem;
+      margin: 15px 0; text-align: center; font-weight: bold; color: #7d6608; font-size: 1.05rem;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;
     }
-
-    .signature-container {
-      border: 2px dashed #b2bec3; border-radius: 8px; background: #fff; text-align: center; padding: 10px; position: relative;
-    }
-    canvas { border: 1px solid #ddd; border-radius: 5px; background: #fff; cursor: crosshair; touch-action: none; }
+    .score-badge { background: #fff; padding: 8px; border-radius: 6px; border: 1px solid #f0e68c; }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
@@ -139,54 +123,15 @@
     <!-- لوحة التحكم الرئيسية -->
     <div id="dashboard-box" style="display: none;">
       <div class="user-bar">
-        <span>مرحباً بك: <span id="currentUserName"></span> <span id="adminBadge" class="badge-admin" style="display:none;">إدارة</span></span>
+        <span>مرحباً بك: <span id="currentUserName"></span></span>
         <button class="btn btn-secondary" style="width: auto; flex: none;" onclick="logout()"><i class="fa-solid fa-power-off"></i> خروج</button>
       </div>
 
       <div class="grid-menu">
-        <!-- أيقونة الإدارة المتحكمة -->
-        <div id="adminMenuCard" class="card admin-card" style="display:none;" onclick="openSection('admin-control-box'); fetchAllDataForAdmin();">
-          <i class="fa-solid fa-user-shield"></i>
-          <h3>لوحة الإدارة المتحكمة</h3>
-          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">متابعة جميع أعمال المشرفات وإضافة النماذج</p>
-        </div>
-
-        <!-- أيقونة الاستمارة الأسبوعية -->
         <div class="card weekly-card" style="border: 2px solid #e67e22;" onclick="openSection('weekly-menu-box');">
           <i class="fa-solid fa-calendar-week" style="color:#e67e22;"></i>
           <h3>الاستمارة الأسبوعية</h3>
           <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">تقييم سير حصة القرآن واستمارات المتابعة الأسبوعية</p>
-        </div>
-
-        <!-- أيقونة كشف الخروج -->
-        <div class="card" style="border: 2px solid var(--admin-color);" onclick="openSection('exit-log-box'); initExitLogPage();">
-          <i class="fa-solid fa-clipboard-user" style="color:var(--admin-color);"></i>
-          <h3>كشف الخروج</h3>
-          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">تسجيل افتقاد المراكز وحساب أيام الحضور والتوقيع</p>
-        </div>
-
-        <div class="card" onclick="openSection('daily-plan-box')">
-          <i class="fa-solid fa-calendar-check"></i>
-          <h3>الخطة اليومية</h3>
-          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">تسجيل ومتابعة الزيارات اليومية</p>
-        </div>
-
-        <div class="card" onclick="openSection('employees-box'); fetchEmployees();">
-          <i class="fa-solid fa-id-card"></i>
-          <h3>أحوال الموظفات</h3>
-          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">بيانات وتأهيل المعلمات</p>
-        </div>
-
-        <div class="card" onclick="openSection('forms-box'); fetchAdminForms();">
-          <i class="fa-solid fa-file-signature"></i>
-          <h3>نماذج المشرفة</h3>
-          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">النماذج والاستمارات الموجهة لكِ من الإدارة</p>
-        </div>
-
-        <div class="card" onclick="openSection('attachments-box'); fetchAttachments();">
-          <i class="fa-solid fa-paperclip"></i>
-          <h3>المرفقات العامة</h3>
-          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">إرفاق الاستمارات والروابط</p>
         </div>
       </div>
     </div>
@@ -225,7 +170,7 @@
       </div>
     </div>
 
-    <!-- نموذج استمارة تقييم سير حصة القرآن المكتمل بالكامل (23 بنداً) -->
+    <!-- نموذج استمارة تقييم سير حصة القرآن (23 بنداً بالكامل) -->
     <div id="weekly-eval-box" class="form-box">
       <div class="section-header">
         <h2><i class="fa-solid fa-file-circle-check" style="color:#27ae60;"></i> تقرير زيارة المشرفة التعليمية لسير حصة القرآن</h2>
@@ -259,10 +204,10 @@
         <hr style="margin:20px 0;">
 
         <!-- 1. المهارات الأساسية 70% -->
-        <h3 style="color:var(--main-color); margin-bottom:10px;">أولاً: المهارات الأساسية (70%)</h3>
+        <h3 style="color:var(--main-color); margin-bottom:10px;">أولاً: المهارات الأساسية (الوزن النسبي: 70% | معامل الضرب: 1.794)</h3>
         <table class="data-table">
           <thead>
-            <tr><th>م</th><th>البند</th><th>الدرجة المستحقة (من الحد الأقصى)</th></tr>
+            <tr><th>م</th><th>البند</th><th>درجة التقييم المدخلة</th></tr>
           </thead>
           <tbody>
             <tr><td>1</td><td>القراءة المثالية للمعلمة</td><td><input type="number" class="w-score-1" max="20" min="0" value="20" oninput="calculateWeeklyTotal()"> / 20</td></tr>
@@ -276,10 +221,10 @@
         </table>
 
         <!-- 2. المهارات الثانوية 10% -->
-        <h3 style="color:var(--main-color); margin:20px 0 10px 0;">ثانياً: المهارات الثانوية (10%)</h3>
+        <h3 style="color:var(--main-color); margin:20px 0 10px 0;">ثانياً: المهارات الثانوية (الوزن النسبي: 10% | معامل الضرب: 1.66)</h3>
         <table class="data-table">
           <thead>
-            <tr><th>م</th><th>البند</th><th>الدرجة المستحقة</th></tr>
+            <tr><th>م</th><th>البند</th><th>درجة التقييم المدخلة</th></tr>
           </thead>
           <tbody>
             <tr><td>1</td><td>تفقد المصاحف</td><td><input type="number" class="w-score-2" max="3" min="0" value="3" oninput="calculateWeeklyTotal()"> / 3</td></tr>
@@ -287,11 +232,11 @@
           </tbody>
         </table>
 
-        <!-- 3. المهارات الفرعية 20% (جميع البنود الـ 14 مكتملة) -->
-        <h3 style="color:var(--main-color); margin:20px 0 10px 0;">ثالثاً: المهارات الفرعية (20%)</h3>
+        <!-- 3. المهارات الفرعية 20% -->
+        <h3 style="color:var(--main-color); margin:20px 0 10px 0;">ثالثاً: المهارات الفرعية (الوزن النسبي: 20% | معامل الضرب: 0.3636)</h3>
         <table class="data-table">
           <thead>
-            <tr><th>م</th><th>البند</th><th>الدرجة المستحقة</th></tr>
+            <tr><th>م</th><th>البند</th><th>درجة التقييم المدخلة</th></tr>
           </thead>
           <tbody>
             <tr><td>1</td><td>تقدير المسؤولية</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
@@ -311,10 +256,11 @@
           </tbody>
         </table>
 
-        <!-- بطاقة النتيجة والتقدير الآلي -->
+        <!-- بطاقة النتائج المزدوجة والتقدير الآلي الشرطي -->
         <div class="score-summary">
-          المجموع الكلي الموزون: <span id="wFinalScore" style="color:var(--admin-color); font-size:1.4rem;">100</span> / 100 
-          | التقدير: <span id="wGradeRating" style="color:var(--success-color); font-size:1.3rem;">ممتاز</span>
+          <div class="score-badge">الدرجة الخام (التقييم): <br><span id="wRawScore" style="color:var(--secondary-color); font-size:1.2rem;">100</span> / 100</div>
+          <div class="score-badge">الدرجة الموزونة الكلية: <br><span id="wWeightedScore" style="color:var(--admin-color); font-size:1.3rem;">100</span> / 100</div>
+          <div class="score-badge">التقدير المستحق: <br><span id="wGradeRating" style="color:var(--success-color); font-size:1.3rem;">ممتاز</span></div>
         </div>
 
         <div class="form-group full-width">
@@ -326,112 +272,32 @@
       </form>
     </div>
 
-    <!-- قسم كشف الخروج -->
-    <div id="exit-log-box" class="form-box">
-      <div class="section-header">
-        <h2><i class="fa-solid fa-clipboard-user" style="color:var(--admin-color);"></i> كشف الخروج والزيارات الميدانية</h2>
-        <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة</button>
-      </div>
-
-      <div class="stats-card">
-        <div>
-          <h4><i class="fa-solid fa-calendar-days"></i> إجمالي عدد أيام الحضور والمتابعة للمراكز:</h4>
-          <small style="color:#7f8c8d;">حساب يوم لكل زيارة مركز جديدة مسجلة</small>
-        </div>
-        <div class="count" id="attendanceDaysCount">0 يوم</div>
-      </div>
-
-      <form id="exitLogForm">
-        <div class="form-grid">
-          <div class="form-group"><label>اليوم:</label><input type="text" id="autoDayName" readonly style="background:#eef2f5; font-weight:bold;"></div>
-          <div class="form-group"><label>التاريخ:</label><input type="text" id="autoDateStr" readonly style="background:#eef2f5; font-weight:bold;"></div>
-          <div class="form-group full-width">
-            <label>اسم المركز (من قائمة قوقل شيت):</label>
-            <select id="centerNameSelect" required><option value="">-- جاري التحميل... --</option></select>
-          </div>
-          <div class="form-group full-width" style="background:#fff3cd; padding:12px; border-radius:8px; border:1px solid #ffeeba;">
-            <label style="color:#856404; cursor:pointer;">
-              <input type="checkbox" id="absentCheck" onchange="toggleSignatureRequirement()">
-              <b>المديرة متغيبة؟ (تمت زيارة المركز ولكن المديرة متغيبة)</b>
-            </label>
-          </div>
-          <div class="form-group full-width"><label>الملاحظات:</label><textarea id="exitNotes" rows="2"></textarea></div>
-          <div class="form-group full-width" id="signatureArea">
-            <label><i class="fa-solid fa-signature"></i> توقيع مديرة المركز الإلكتروني <span id="sigRequiredStar" style="color:red;">*</span>:</label>
-            <div class="signature-container">
-              <canvas id="sigCanvas" width="400" height="150"></canvas>
-              <div style="margin-top:8px;">
-                <button type="button" class="btn btn-secondary" style="display:inline-flex; width:auto; padding:4px 12px; font-size:0.8rem;" onclick="clearCanvas()">مسح التوقيع</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <button type="submit" class="btn btn-admin" style="margin-top:20px;"><i class="fa-solid fa-floppy-disk"></i> تسجيل الخروج في قوقل شيت</button>
-      </form>
-    </div>
-
-    <!-- لوحة تحكم الإدارة المتحكمة -->
-    <div id="admin-control-box" class="form-box">
-      <div class="section-header"><h2><i class="fa-solid fa-user-shield"></i> لوحة الإدارة المتحكمة</h2><button class="btn btn-secondary" onclick="backToDashboard()">عودة</button></div>
-      <table class="data-table"><thead><tr><th>تاريخ التسجيل</th><th>اسم المشرفة</th><th>المعلمة المستهدفة</th><th>نوع الزيارة</th><th>اليوم والتاريخ</th><th>الاستمارة</th></tr></thead><tbody id="adminPlansTable"></tbody></table>
-    </div>
-
-    <!-- قسم الخطة اليومية -->
-    <div id="daily-plan-box" class="form-box">
-      <div class="section-header"><h2><i class="fa-solid fa-calendar-day"></i> الخطة اليومية</h2><button class="btn btn-secondary" onclick="backToDashboard()">عودة</button></div>
-      <form id="dailyPlanForm"><div class="form-grid"><div class="form-group"><label>اسم المعلمة:</label><input type="text" id="teacherName" required></div><div class="form-group"><label>رابط الاستمارة:</label><input type="url" id="formUrl" required></div></div><button type="submit" class="btn btn-success">حفظ في قوقل شيت</button></form>
-    </div>
-
-    <!-- قسم أحوال الموظفات -->
-    <div id="employees-box" class="form-box">
-      <div class="section-header"><h2><i class="fa-solid fa-users"></i> أحوال الموظفات</h2><button class="btn btn-secondary" onclick="backToDashboard()">عودة</button></div>
-      <table class="data-table" id="empTable"><thead><tr><th>اسم المعلمة</th><th>المؤهل</th><th>مؤهل القرآن</th><th>الفئة</th><th>الجنسية</th><th>الهاتف</th></tr></thead><tbody id="empTableBody"></tbody></table>
-    </div>
-
-    <!-- قسم نماذج المشرفة -->
-    <div id="forms-box" class="form-box">
-      <div class="section-header"><h2><i class="fa-solid fa-file-signature"></i> نماذج المشرفة</h2><button class="btn btn-secondary" onclick="backToDashboard()">عودة</button></div>
-      <table class="data-table"><thead><tr><th>عنوان النموذج</th><th>الوصف</th><th>الرابط</th></tr></thead><tbody id="supervisorFormsTable"></tbody></table>
-    </div>
-
-    <!-- قسم المرفقات -->
-    <div id="attachments-box" class="form-box">
-      <div class="section-header"><h2><i class="fa-solid fa-folder-open"></i> المرفقات العامة</h2><button class="btn btn-secondary" onclick="backToDashboard()">عودة</button></div>
-      <table class="data-table"><thead><tr><th>عنوان المرفق</th><th>الرابط</th></tr></thead><tbody id="attachTableBody"></tbody></table>
-    </div>
-
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxLOCHCNqqxzXDL9i-CzO8C1dlL9a_86HxP1SmGptfSZvjDIYgF3-5UEdzQTdpi6OxALA/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyFV_kYmCcrefr6f1AWIFIretPzP8oOlEGLx89vUIb-kYh_eGaxrmGNH1IwlDHgePDV3w/exec";
     let currentUser = "";
-    let isAdmin = false;
     let employeesData = [];
 
     window.onload = function() {
       const savedUser = sessionStorage.getItem('supervisor_user');
       if (savedUser) {
         currentUser = savedUser;
-        isAdmin = (currentUser === "الإدارة العامة");
         setupUIForUser();
       } else {
         document.getElementById('login-box').classList.add('active');
       }
-      initCanvas();
     };
 
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
       currentUser = document.getElementById('loginUser').value;
-      isAdmin = (currentUser === "الإدارة العامة");
       sessionStorage.setItem('supervisor_user', currentUser);
       setupUIForUser();
     });
 
     function setupUIForUser() {
       document.getElementById('currentUserName').innerText = currentUser;
-      document.getElementById('adminBadge').style.display = isAdmin ? 'inline-block' : 'none';
-      document.getElementById('adminMenuCard').style.display = isAdmin ? 'block' : 'none';
       document.getElementById('login-box').style.display = 'none';
       document.getElementById('dashboard-box').style.display = 'block';
     }
@@ -447,7 +313,6 @@
       document.getElementById('dashboard-box').style.display = 'block';
     }
 
-    // --- البرمجيات الخاصة بالاستمارة الأسبوعية ---
     function openWeeklyFormEval() {
       openSection('weekly-eval-box');
       const now = new Date();
@@ -455,6 +320,7 @@
       document.getElementById('wDay').value = days[now.getDay()];
       document.getElementById('wDate').value = now.toLocaleDateString('ar-SA');
       loadTeachersForWeeklySelect();
+      calculateWeeklyTotal();
     }
 
     function loadTeachersForWeeklySelect() {
@@ -479,18 +345,41 @@
       }
     }
 
+    // --- حساب الدرجة الموزونة الكلية وسلم التقديرات الشرطي ---
     function calculateWeeklyTotal() {
-      let sum = 0;
-      document.querySelectorAll('.w-score-1, .w-score-2, .w-score-3').forEach(input => {
-        sum += parseFloat(input.value) || 0;
-      });
-      document.getElementById('wFinalScore').innerText = sum;
-      
-      let rating = "لم تجتز";
-      if(sum >= 90) rating = "ممتاز";
-      else if(sum >= 80) rating = "جيد جداً";
-      else if(sum >= 70) rating = "جيد";
-      
+      let rawSum1 = 0, rawSum2 = 0, rawSum3 = 0;
+
+      document.querySelectorAll('.w-score-1').forEach(input => { rawSum1 += parseFloat(input.value) || 0; });
+      document.querySelectorAll('.w-score-2').forEach(input => { rawSum2 += parseFloat(input.value) || 0; });
+      document.querySelectorAll('.w-score-3').forEach(input => { rawSum3 += parseFloat(input.value) || 0; });
+
+      const totalRawScore = rawSum1 + rawSum2 + rawSum3; // الدرجة الخام
+
+      // احتساب الدرجة الموزونة
+      const weighted1 = rawSum1 * 1.794;
+      const weighted2 = rawSum2 * 1.66;
+      const weighted3 = rawSum3 * 0.3636;
+      const weightedScore = Math.min(100, Math.round((weighted1 + weighted2 + weighted3) * 100) / 100);
+
+      document.getElementById('wRawScore').innerText = totalRawScore;
+      document.getElementById('wWeightedScore').innerText = weightedScore;
+
+      // تطبيق سلم التقديرات بناءً على الدرجة الموزونة
+      let rating = "لم تجتاز";
+      if (weightedScore >= 90) {
+        rating = "ممتاز";
+      } else if (weightedScore >= 80) {
+        rating = "جيد جداً";
+      } else if (weightedScore >= 70) {
+        rating = "جيد";
+      } else if (weightedScore >= 60) {
+        rating = "مقبول";
+      } else if (weightedScore >= 50) {
+        rating = "ضعيف";
+      } else {
+        rating = "لم تجتاز";
+      }
+
       document.getElementById('wGradeRating').innerText = rating;
     }
 
@@ -511,41 +400,19 @@
         totalStudents: document.getElementById('wTotalStudents').value,
         presentStudents: document.getElementById('wPresentStudents').value,
         groupsCount: document.getElementById('wGroupsCount').value,
-        totalScore: document.getElementById('wFinalScore').innerText,
+        rawScore: document.getElementById('wRawScore').innerText,
+        weightedScore: document.getElementById('wWeightedScore').innerText,
         gradeRating: document.getElementById('wGradeRating').innerText,
         notes: document.getElementById('wNotes').value
       };
 
       fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
       .then(() => {
-        alert('✅ تم حفظ الاستمارة الأسبوعية بنجاح في Google Sheet!');
+        alert('✅ تم حفظ الاستمارة الأسبوعية بنجاح بحساب الدرجة الموزونة والتقدير!');
         document.getElementById('weeklyEvalForm').reset();
         openSection('weekly-menu-box');
       });
     });
-
-    // --- التوقيع والـ Canvas ---
-    let canvas, ctx, isDrawing = false, hasSignature = false;
-    function initCanvas() {
-      canvas = document.getElementById('sigCanvas');
-      if(!canvas) return;
-      ctx = canvas.getContext('2d');
-      ctx.lineWidth = 2; ctx.strokeStyle = "#1a5276";
-      function getPos(e) {
-        const rect = canvas.getBoundingClientRect();
-        return { x: (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left, y: (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top };
-      }
-      function startDraw(e) { isDrawing = true; hasSignature = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); }
-      function draw(e) { if (!isDrawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }
-      function stopDraw() { isDrawing = false; }
-      canvas.addEventListener('mousedown', startDraw); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stopDraw);
-      canvas.addEventListener('touchstart', startDraw); canvas.addEventListener('touchmove', draw); canvas.addEventListener('touchend', stopDraw);
-    }
-    function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); hasSignature = false; }
-    function toggleSignatureRequirement() {
-      const absent = document.getElementById('absentCheck').checked;
-      document.getElementById('sigRequiredStar').style.display = absent ? "none" : "inline";
-    }
   </script>
 </body>
 </html>
