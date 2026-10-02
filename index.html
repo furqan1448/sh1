@@ -40,6 +40,7 @@
     .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
     .card i { font-size: 3rem; color: var(--secondary-color); margin-bottom: 12px; }
     .card.admin-card i { color: var(--admin-color); }
+    .card.weekly-card i { color: #e67e22; }
 
     .form-box {
       background: var(--card-bg); border-radius: 15px; padding: 25px;
@@ -75,6 +76,7 @@
     .btn-success { background-color: var(--success-color); }
     .btn-danger { background-color: var(--danger-color); }
     .btn-secondary { background-color: #7f8c8d; }
+    .btn-warning { background-color: #e67e22; }
 
     .user-bar {
       background: #eaf2f8; padding: 12px 20px; border-radius: 10px; margin-bottom: 20px;
@@ -89,12 +91,10 @@
     .badge-admin { background: var(--admin-color); color: white; padding: 3px 8px; border-radius: 5px; font-size: 0.8rem; }
     .target-tag { background: #e8daef; color: var(--admin-color); padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
 
-    .stats-card {
-      background: linear-gradient(135deg, #ebf5fb, #e8daef); padding: 15px 20px; border-radius: 10px;
-      margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #d4e6f1;
+    .score-summary {
+      background: #fef9e7; border: 1px solid #f9e79f; padding: 15px; border-radius: 10px;
+      margin: 15px 0; text-align: center; font-weight: bold; color: #7d6608; font-size: 1.1rem;
     }
-    .stats-card h4 { color: var(--main-color); margin: 0; font-size: 1.1rem; }
-    .stats-card .count { font-size: 1.6rem; font-weight: bold; color: var(--admin-color); }
 
     .signature-container {
       border: 2px dashed #b2bec3; border-radius: 8px; background: #fff; text-align: center; padding: 10px; position: relative;
@@ -108,7 +108,7 @@
 
   <header>
     <h1><i class="fa-solid fa-user-gear"></i> المنظومة الشاملة للإدارة والإشراف التربوي</h1>
-    <p>لوحة تحكم الإدارة ومتابعة أعمال المشرفات وكشوفات الخروج</p>
+    <p>لوحة تحكم الإدارة ومتابعة أعمال المشرفات والاستشارات الأسبوعية</p>
   </header>
 
   <div class="container">
@@ -144,12 +144,21 @@
       </div>
 
       <div class="grid-menu">
+        <!-- أيقونة الإدارة المتحكمة -->
         <div id="adminMenuCard" class="card admin-card" style="display:none;" onclick="openSection('admin-control-box'); fetchAllDataForAdmin();">
           <i class="fa-solid fa-user-shield"></i>
           <h3>لوحة الإدارة المتحكمة</h3>
           <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">متابعة جميع أعمال المشرفات وإضافة النماذج</p>
         </div>
 
+        <!-- أيقونة الاستمارة الأسبوعية الجديدة -->
+        <div class="card weekly-card" style="border: 2px solid #e67e22;" onclick="openSection('weekly-menu-box');">
+          <i class="fa-solid fa-calendar-week" style="color:#e67e22;"></i>
+          <h3>الاستمارة الأسبوعية</h3>
+          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">تقييم سير حصة القرآن واستمارات المتابعة الأسبوعية</p>
+        </div>
+
+        <!-- أيقونة كشف الخروج -->
         <div class="card" style="border: 2px solid var(--admin-color);" onclick="openSection('exit-log-box'); initExitLogPage();">
           <i class="fa-solid fa-clipboard-user" style="color:var(--admin-color);"></i>
           <h3>كشف الخروج</h3>
@@ -182,7 +191,130 @@
       </div>
     </div>
 
-    <!-- قسم كشف الخروج -->
+    <!-- قائمة الخيارات الأربعة للاستمارة الأسبوعية -->
+    <div id="weekly-menu-box" class="form-box">
+      <div class="section-header">
+        <h2><i class="fa-solid fa-calendar-week" style="color:#e67e22;"></i> الخيارات الأربعة للاستمارات الأسبوعية</h2>
+        <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة</button>
+      </div>
+
+      <div class="grid-menu" style="margin-top:20px;">
+        <div class="card" onclick="openWeeklyFormEval();">
+          <i class="fa-solid fa-file-circle-check" style="color:#27ae60;"></i>
+          <h3>1. تقييم سير حصة القرآن</h3>
+          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">تعبئة الاستمارة الذكية مع الحساب والربط الآلي</p>
+        </div>
+
+        <div class="card" onclick="window.open('https://docs.google.com/spreadsheets/d/1jWjl54TlvnejdHJ6EzfZXsga_-_CqI_AGccAeman2xk/edit', '_blank');">
+          <i class="fa-solid fa-file-excel" style="color:#2980b9;"></i>
+          <h3>2. شيت الاستمارة الأسبوعية الأصلي</h3>
+          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">فتح النموذج الخارجي على Google Sheets مباشرة</p>
+        </div>
+
+        <div class="card" onclick="alert('استمارة الخيار الثالث جاهزة للربط!');">
+          <i class="fa-solid fa-clipboard-list" style="color:#8e44ad;"></i>
+          <h3>3. استمارة المتابعة الأسبوعية 3</h3>
+          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">استمارة أسبوعية تكميلية</p>
+        </div>
+
+        <div class="card" onclick="alert('استمارة الخيار الرابع جاهزة للربط!');">
+          <i class="fa-solid fa-chart-pie" style="color:#e74c3c;"></i>
+          <h3>4. التقرير الإحصائي الأسبوعي</h3>
+          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">ملخص المخرجات الأسبوعية</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- نموذج استمارة تقييم سير حصة القرآن الذكي -->
+    <div id="weekly-eval-box" class="form-box">
+      <div class="section-header">
+        <h2><i class="fa-solid fa-file-circle-check" style="color:#27ae60;"></i> تقرير زيارة المشرفة التعليمية لسير حصة القرآن</h2>
+        <button class="btn btn-secondary" style="width:auto;" onclick="openSection('weekly-menu-box')">عودة للخيارات</button>
+      </div>
+
+      <form id="weeklyEvalForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>اختر المعلمة (تعبئة تلقائية للبيانات):</label>
+            <select id="wTeacherSelect" onchange="autoFillTeacherData()" required>
+              <option value="">-- اختر المعلمة من السجل --</option>
+            </select>
+          </div>
+          <div class="form-group"><label>اسم المركز:</label><input type="text" id="wCenter" required></div>
+          <div class="form-group">
+            <label>الفترة:</label>
+            <select id="wPeriod"><option value="صباحي">صباحي</option><option value="مسائي">مسائي</option></select>
+          </div>
+          <div class="form-group"><label>المؤهل في القرآن:</label><input type="text" id="wQuranDegree" readonly style="background:#eef2f5;"></div>
+          <div class="form-group"><label>الفئة:</label><input type="text" id="wCategory" readonly style="background:#eef2f5;"></div>
+          <div class="form-group"><label>اليوم:</label><input type="text" id="wDay" readonly style="background:#eef2f5; font-weight:bold;"></div>
+          <div class="form-group"><label>التاريخ:</label><input type="text" id="wDate" readonly style="background:#eef2f5; font-weight:bold;"></div>
+          <div class="form-group"><label>عنوان الدرس:</label><input type="text" id="wLessonTitle" required placeholder="سورة ..."></div>
+          <div class="form-group"><label>نوع الزيارة:</label><input type="text" id="wVisitType" value="تقويمية" required></div>
+          <div class="form-group"><label>العدد الكلي للدارسات:</label><input type="number" id="wTotalStudents" value="0"></div>
+          <div class="form-group"><label>العدد الحاضر:</label><input type="number" id="wPresentStudents" value="0"></div>
+          <div class="form-group"><label>عدد المجموعات:</label><input type="number" id="wGroupsCount" value="1"></div>
+        </div>
+
+        <hr style="margin:20px 0;">
+
+        <h3 style="color:var(--main-color); margin-bottom:10px;">أولاً: المهارات الأساسية (70%)</h3>
+        <table class="data-table">
+          <thead>
+            <tr><th>م</th><th>البند</th><th>الدرجة المستحقة (من الحد الأقصى)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>القراءة المثالية للمعلمة</td><td><input type="number" class="w-score-1" max="20" min="0" value="20" oninput="calculateWeeklyTotal()"> / 20</td></tr>
+            <tr><td>2</td><td>التصويب أثناء تسميع الواجب</td><td><input type="number" class="w-score-1" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
+            <tr><td>3</td><td>القراءة الجماعية مع التصويب</td><td><input type="number" class="w-score-1" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
+            <tr><td>4</td><td>قراءة المجيدات فأقل مع التصويب</td><td><input type="number" class="w-score-1" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
+            <tr><td>5</td><td>وضوح الصوت</td><td><input type="number" class="w-score-1" max="1" min="0" value="1" oninput="calculateWeeklyTotal()"> / 1</td></tr>
+            <tr><td>6</td><td>مراعاة الفروق الفردية للدارسات</td><td><input type="number" class="w-score-1" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
+            <tr><td>7</td><td>المحافظة على الدوام</td><td><input type="number" class="w-score-1" max="1" min="0" value="1" oninput="calculateWeeklyTotal()"> / 1</td></tr>
+          </tbody>
+        </table>
+
+        <h3 style="color:var(--main-color); margin:20px 0 10px 0;">ثانياً: المهارات الثانوية (10%)</h3>
+        <table class="data-table">
+          <thead>
+            <tr><th>م</th><th>البند</th><th>الدرجة المستحقة</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>تفقد المصاحف</td><td><input type="number" class="w-score-2" max="3" min="0" value="3" oninput="calculateWeeklyTotal()"> / 3</td></tr>
+            <tr><td>2</td><td>استخدام الفصحى في الحديث</td><td><input type="number" class="w-score-2" max="3" min="0" value="3" oninput="calculateWeeklyTotal()"> / 3</td></tr>
+          </tbody>
+        </table>
+
+        <h3 style="color:var(--main-color); margin:20px 0 10px 0;">ثالثاً: المهارات الفرعية (20%)</h3>
+        <table class="data-table">
+          <thead>
+            <tr><th>م</th><th>البند</th><th>الدرجة المستحقة</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>تقدير المسؤولية والإنضباط</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
+            <tr><td>2</td><td>المظهر العام والقدوة الحسنة</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
+            <tr><td>3</td><td>صحة المادة العلمية (التمهيد وتثبيت العقيدة)</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
+            <tr><td>4</td><td>التمكن من إيصال المادة والتحضير الذهني</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
+            <tr><td>5</td><td>تحقيق الأهداف التربوية والربط بالواقع</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
+          </tbody>
+        </table>
+
+        <!-- بطاقة النتيجة والتقدير الآلي -->
+        <div class="score-summary">
+          المجموع الكلي الموزون: <span id="wFinalScore" style="color:var(--admin-color); font-size:1.4rem;">100</span> / 100 
+          | التقدير: <span id="wGradeRating" style="color:var(--success-color); font-size:1.3rem;">ممتاز</span>
+        </div>
+
+        <div class="form-group full-width">
+          <label>ملاحظات وتوصيات المشرفة:</label>
+          <textarea id="wNotes" rows="3" placeholder="أدخلي أي ملاحظات أو توصيات للمعلمة..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-warning" style="width:100%; margin-top:15px;"><i class="fa-solid fa-cloud-arrow-up"></i> حفظ الاستمارة الأسبوعية في قوقل شيت</button>
+      </form>
+    </div>
+
+    <!-- باقي الأقسام المعتادة (كشف الخروج، الإدارة، الخطة اليومية، أحوال الموظفات، المرفقات) -->
     <div id="exit-log-box" class="form-box">
       <div class="section-header">
         <h2><i class="fa-solid fa-clipboard-user" style="color:var(--admin-color);"></i> كشف الخروج والزيارات الميدانية</h2>
@@ -192,267 +324,64 @@
       <div class="stats-card">
         <div>
           <h4><i class="fa-solid fa-calendar-days"></i> إجمالي عدد أيام الحضور والمتابعة للمراكز:</h4>
-          <small style="color:#7f8c8d;">يتم تحسين العطاء وحساب يوم لكل زيارة مركز جديدة مسجلة</small>
+          <small style="color:#7f8c8d;">حساب يوم لكل زيارة مركز جديدة مسجلة</small>
         </div>
         <div class="count" id="attendanceDaysCount">0 يوم</div>
       </div>
 
       <form id="exitLogForm">
         <div class="form-grid">
-          <div class="form-group">
-            <label>اليوم:</label>
-            <input type="text" id="autoDayName" readonly style="background:#eef2f5; font-weight:bold;">
-          </div>
-          <div class="form-group">
-            <label>التاريخ:</label>
-            <input type="text" id="autoDateStr" readonly style="background:#eef2f5; font-weight:bold;">
-          </div>
+          <div class="form-group"><label>اليوم:</label><input type="text" id="autoDayName" readonly style="background:#eef2f5; font-weight:bold;"></div>
+          <div class="form-group"><label>التاريخ:</label><input type="text" id="autoDateStr" readonly style="background:#eef2f5; font-weight:bold;"></div>
           <div class="form-group full-width">
-            <label>اسم المركز (من القائمة المنسدلة المسجلة في الشيت):</label>
-            <select id="centerNameSelect" required>
-              <option value="">-- جاري تحميل مراكز قوقل شيت... --</option>
-            </select>
+            <label>اسم المركز (من قائمة قوقل شيت):</label>
+            <select id="centerNameSelect" required><option value="">-- جاري التحميل... --</option></select>
           </div>
-
           <div class="form-group full-width" style="background:#fff3cd; padding:12px; border-radius:8px; border:1px solid #ffeeba;">
             <label style="color:#856404; cursor:pointer;">
               <input type="checkbox" id="absentCheck" onchange="toggleSignatureRequirement()">
               <b>المديرة متغيبة؟ (تمت زيارة المركز ولكن المديرة متغيبة)</b>
             </label>
-            <small style="display:block; color:#856404; margin-top:4px;">عند تفعيل هذا الخيار يتم إضافة الملاحظة تلقائياً وإلغاء إجبارية توقيع المديرة.</small>
           </div>
-
-          <div class="form-group full-width">
-            <label>الملاحظات:</label>
-            <textarea id="exitNotes" rows="2" placeholder="أدخلي أي ملاحظات إضافية حول الزيارة..."></textarea>
-          </div>
-
+          <div class="form-group full-width"><label>الملاحظات:</label><textarea id="exitNotes" rows="2"></textarea></div>
           <div class="form-group full-width" id="signatureArea">
             <label><i class="fa-solid fa-signature"></i> توقيع مديرة المركز الإلكتروني <span id="sigRequiredStar" style="color:red;">*</span>:</label>
             <div class="signature-container">
               <canvas id="sigCanvas" width="400" height="150"></canvas>
               <div style="margin-top:8px;">
-                <button type="button" class="btn btn-secondary" style="display:inline-flex; width:auto; padding:4px 12px; font-size:0.8rem;" onclick="clearCanvas()">مسح التوقيع وإعادة المحاولة</button>
+                <button type="button" class="btn btn-secondary" style="display:inline-flex; width:auto; padding:4px 12px; font-size:0.8rem;" onclick="clearCanvas()">مسح التوقيع</button>
               </div>
             </div>
           </div>
         </div>
-
-        <button type="submit" class="btn btn-admin" style="margin-top:20px;"><i class="fa-solid fa-floppy-disk"></i> تسجيل الخروج في كشف قوقل شيت</button>
+        <button type="submit" class="btn btn-admin" style="margin-top:20px;"><i class="fa-solid fa-floppy-disk"></i> تسجيل الخروج في قوقل شيت</button>
       </form>
-
-      <hr style="margin:25px 0;">
-
-      <h3><i class="fa-solid fa-list-check"></i> سجل كشوفات الخروج المسجلة:</h3>
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>اليوم والتاريخ</th>
-            <th>اسم المشرفة</th>
-            <th>اسم المركز</th>
-            <th>حالة المديرة والملاحظات</th>
-            <th>توقيع المديرة</th>
-          </tr>
-        </thead>
-        <tbody id="exitLogsTableBody"></tbody>
-      </table>
     </div>
 
-    <!-- لوحة تحكم الإدارة المتحكمة -->
+    <!-- باقي النوافذ البرمجية -->
     <div id="admin-control-box" class="form-box">
-      <div class="section-header">
-        <h2><i class="fa-solid fa-user-shield" style="color:var(--admin-color);"></i> لوحة متابعة الإدارة المتحكمة</h2>
-        <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة</button>
-      </div>
-
-      <div style="background:#f9f4fc; padding:18px; border-radius:10px; border:1px solid #e1d5e7; margin-bottom:25px;">
-        <h3 style="color:var(--admin-color); margin-bottom:12px;"><i class="fa-solid fa-plus-circle"></i> إضافة ونشر نموذج/استمارة جديدة:</h3>
-        <form id="addAdminForm">
-          <div class="form-grid">
-            <div class="form-group"><label>عنوان النموذج:</label><input type="text" id="formTitle" placeholder="مثال: استمارة زيارة تقويمية 2026" required></div>
-            <div class="form-group"><label>وصف مختصر:</label><input type="text" id="formDesc" placeholder="توجيهات أو تعليمات حول النموذج"></div>
-            <div class="form-group full-width"><label>رابط النموذج (Google Forms / Drive / Word):</label><input type="url" id="formLink" placeholder="https://..." required></div>
-            
-            <div class="form-group full-width">
-              <label>إرسال النموذج إلى:</label>
-              <select id="targetType" onchange="toggleSupervisorList()" required>
-                <option value="الجميع">جميع المشرفات</option>
-                <option value="محدد">مشرفات محددات</option>
-              </select>
-            </div>
-
-            <div class="form-group full-width" id="supervisorsSelectContainer" style="display:none;">
-              <label>اختر المشرفات المستهدفات:</label>
-              <div class="checkbox-group">
-                <label><input type="checkbox" class="supervisor-chk" value="فاطمة الطلحي"> فاطمة الطلحي</label>
-                <label><input type="checkbox" class="supervisor-chk" value="فاطمة الثمالي"> فاطمة الثمالي</label>
-                <label><input type="checkbox" class="supervisor-chk" value="مريم بالبيد"> مريم بالبيد</label>
-                <label><input type="checkbox" class="supervisor-chk" value="مستورة الخديدي"> مستورة الخديدي</label>
-              </div>
-            </div>
-
-          </div>
-          <button type="submit" class="btn btn-admin"><i class="fa-solid fa-paper-plane"></i> نشر النموذج</button>
-        </form>
-      </div>
-
-      <h3 style="color:var(--main-color); margin-bottom:10px;"><i class="fa-solid fa-chart-line"></i> تقرير أعمال وخطط المشرفات المسجلة:</h3>
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th class="admin-th">تاريخ التسجيل</th>
-            <th class="admin-th">اسم المشرفة</th>
-            <th class="admin-th">المعلمة المستهدفة</th>
-            <th class="admin-th">نوع الزيارة</th>
-            <th class="admin-th">اليوم والتاريخ</th>
-            <th class="admin-th">استمارة الزيارة</th>
-          </tr>
-        </thead>
-        <tbody id="adminPlansTable"></tbody>
-      </table>
+      <div class="section-header"><h2><i class="fa-solid fa-user-shield"></i> لوحة الإدارة المتحكمة</h2><button class="btn btn-secondary" onclick="backToDashboard()">عودة</button></div>
+      <table class="data-table"><thead><tr><th>تاريخ التسجيل</th><th>اسم المشرفة</th><th>المعلمة المستهدفة</th><th>نوع الزيارة</th><th>اليوم والتاريخ</th><th>الاستمارة</th></tr></thead><tbody id="adminPlansTable"></tbody></table>
     </div>
 
-    <!-- قسم نماذج المشرفة -->
-    <div id="forms-box" class="form-box">
-      <div class="section-header">
-        <h2><i class="fa-solid fa-file-signature"></i> نماذج واستمارات المشرفة</h2>
-        <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة</button>
-      </div>
-      <p style="color:#7f8c8d; margin-bottom:15px;">النماذج والاستمارات الموجهة لكِ رسمياً من الإدارة للعمل بها:</p>
-
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>عنوان النموذج</th>
-            <th>التعليمات والوصف</th>
-            <th>المستهدفون</th>
-            <th>تاريخ الإضافة</th>
-            <th>رابط الفتح/التحميل</th>
-          </tr>
-        </thead>
-        <tbody id="supervisorFormsTable"></tbody>
-      </table>
-    </div>
-
-    <!-- قسم الخطة اليومية -->
     <div id="daily-plan-box" class="form-box">
-      <div class="section-header">
-        <h2><i class="fa-solid fa-calendar-day"></i> الخطة اليومية</h2>
-        <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة</button>
-      </div>
-      <form id="dailyPlanForm">
-        <div class="form-grid">
-          <div class="form-group"><label>اسم المعلمة:</label><input type="text" id="teacherName" required></div>
-          <div class="form-group">
-            <label>الفترة:</label>
-            <select id="period" required>
-              <option value="صباحي">صباحي</option>
-              <option value="مسائي">مسائي</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>اليوم:</label>
-            <select id="dayName" required>
-              <option value="الأحد">الأحد</option><option value="الإثنين">الإثنين</option>
-              <option value="الثلاثاء">الثلاثاء</option><option value="الأربعاء">الأربعاء</option><option value="الخميس">الخميس</option>
-            </select>
-          </div>
-          <div class="form-group"><label>التاريخ:</label><input type="date" id="visitDate" required></div>
-          <div class="form-group">
-            <label>نوع الزيارة:</label>
-            <select id="visitType" required>
-              <option value="زيارة استطلاعية">زيارة استطلاعية</option>
-              <option value="زيارة تقويمية">زيارة تقويمية</option>
-              <option value="زيارة توجيهية">زيارة توجيهية</option>
-              <option value="زيارة متابعة">زيارة متابعة</option>
-            </select>
-          </div>
-          <div class="form-group"><label>رابط الاستمارة:</label><input type="url" id="formUrl" required></div>
-        </div>
-        <button type="submit" class="btn btn-success"><i class="fa-solid fa-cloud-arrow-up"></i> حفظ في قوقل شيت</button>
-      </form>
+      <div class="section-header"><h2><i class="fa-solid fa-calendar-day"></i> الخطة اليومية</h2><button class="btn btn-secondary" onclick="backToDashboard()">عودة</button></div>
+      <form id="dailyPlanForm"><div class="form-grid"><div class="form-group"><label>اسم المعلمة:</label><input type="text" id="teacherName" required></div><div class="form-group"><label>رابط الاستمارة:</label><input type="url" id="formUrl" required></div></div><button type="submit" class="btn btn-success">حفظ في قوقل شيت</button></form>
     </div>
 
-    <!-- قسم أحوال الموظفات -->
     <div id="employees-box" class="form-box">
-      <div class="section-header">
-        <h2><i class="fa-solid fa-users"></i> أحوال الموظفات</h2>
-        <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة</button>
-      </div>
-      
-      <form id="employeeForm">
-        <div class="form-grid">
-          <div class="form-group"><label>اسم المعلمة:</label><input type="text" id="empName" required></div>
-          <div class="form-group">
-            <label>المؤهل العلمي:</label>
-            <select id="empDegree" required>
-              <option value="ثانوي">ثانوي</option>
-              <option value="دبلوم">دبلوم</option>
-              <option value="بكالوريوس">بكالوريوس</option>
-              <option value="ماجستير">ماجستير</option>
-              <option value="دكتوراه">دكتوراه</option>
-            </select>
-          </div>
-          <div class="form-group"><label>المؤهل في القرآن:</label><input type="text" id="quranDegree" placeholder="مثال: خاتمة / 15 جزء" required></div>
-          <div class="form-group">
-            <label>الفئة التي تدرسها:</label>
-            <select id="empCategory" required>
-              <option value="ناشئة">ناشئة</option>
-              <option value="أمهات">أمهات</option>
-              <option value="متعلمات">متعلمات</option>
-            </select>
-          </div>
-          <div class="form-group"><label>عدد الدورات:</label><input type="number" id="empCourses" value="0" min="0"></div>
-          <div class="form-group"><label>الجنسية:</label><input type="text" id="empNationality" required></div>
-          <div class="form-group"><label>رقم الهاتف:</label><input type="tel" id="empPhone" required></div>
-        </div>
-
-        <div class="btn-group">
-          <button type="button" class="btn" onclick="saveDraft()"><i class="fa-solid fa-bookmark"></i> حفظ مسودة محلياً</button>
-          <button type="submit" class="btn btn-success"><i class="fa-solid fa-cloud-arrow-up"></i> حفظ في قوقل شيت</button>
-        </div>
-      </form>
-
-      <hr style="margin:25px 0;">
-
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3>قائمة الموظفات المسجلة:</h3>
-        <button class="btn btn-secondary" style="padding: 5px 10px; width:auto;" onclick="exportExcel()"><i class="fa-solid fa-file-excel"></i> تصدير إكسل</button>
-      </div>
-
-      <table class="data-table" id="empTable">
-        <thead>
-          <tr>
-            <th>اسم المعلمة</th><th>المؤهل</th><th>مؤهل القرآن</th><th>الفئة</th><th>الدورات</th><th>الجنسية</th><th>الهاتف</th><th>حذف</th>
-          </tr>
-        </thead>
-        <tbody id="empTableBody"></tbody>
-      </table>
+      <div class="section-header"><h2><i class="fa-solid fa-users"></i> أحوال الموظفات</h2><button class="btn btn-secondary" onclick="backToDashboard()">عودة</button></div>
+      <table class="data-table" id="empTable"><thead><tr><th>اسم المعلمة</th><th>المؤهل</th><th>مؤهل القرآن</th><th>الفئة</th><th>الجنسية</th><th>الهاتف</th></tr></thead><tbody id="empTableBody"></tbody></table>
     </div>
 
-    <!-- قسم المرفقات -->
+    <div id="forms-box" class="form-box">
+      <div class="section-header"><h2><i class="fa-solid fa-file-signature"></i> نماذج المشرفة</h2><button class="btn btn-secondary" onclick="backToDashboard()">عودة</button></div>
+      <table class="data-table"><thead><tr><th>عنوان النموذج</th><th>الوصف</th><th>الرابط</th></tr></thead><tbody id="supervisorFormsTable"></tbody></table>
+    </div>
+
     <div id="attachments-box" class="form-box">
-      <div class="section-header">
-        <h2><i class="fa-solid fa-folder-open"></i> المرفقات والروابط العامة</h2>
-        <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة</button>
-      </div>
-
-      <form id="attachForm">
-        <div class="form-grid">
-          <div class="form-group"><label>عنوان المرفق:</label><input type="text" id="attachTitle" required placeholder="مثال: استمارة تقييم شهر أكتوبر"></div>
-          <div class="form-group full-width"><label>رابط المرفق / الملف:</label><input type="url" id="attachUrl" required placeholder="ضع رابط Google Drive / OneDrive"></div>
-        </div>
-        <button type="submit" class="btn btn-success"><i class="fa-solid fa-upload"></i> إضافة المرفق</button>
-      </form>
-
-      <hr style="margin:20px 0;">
-
-      <table class="data-table">
-        <thead>
-          <tr><th>عنوان المرفق</th><th>المشرفة</th><th>الرابط</th><th>حذف</th></tr>
-        </thead>
-        <tbody id="attachTableBody"></tbody>
-      </table>
+      <div class="section-header"><h2><i class="fa-solid fa-folder-open"></i> المرفقات العامة</h2><button class="btn btn-secondary" onclick="backToDashboard()">عودة</button></div>
+      <table class="data-table"><thead><tr><th>عنوان المرفق</th><th>الرابط</th></tr></thead><tbody id="attachTableBody"></tbody></table>
     </div>
 
   </div>
@@ -461,8 +390,7 @@
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyFV_kYmCcrefr6f1AWIFIretPzP8oOlEGLx89vUIb-kYh_eGaxrmGNH1IwlDHgePDV3w/exec";
     let currentUser = "";
     let isAdmin = false;
-
-    let canvas, ctx, isDrawing = false, hasSignature = false;
+    let employeesData = [];
 
     window.onload = function() {
       const savedUser = sessionStorage.getItem('supervisor_user');
@@ -473,7 +401,6 @@
       } else {
         document.getElementById('login-box').classList.add('active');
       }
-      loadDraft();
       initCanvas();
     };
 
@@ -489,365 +416,119 @@
       document.getElementById('currentUserName').innerText = currentUser;
       document.getElementById('adminBadge').style.display = isAdmin ? 'inline-block' : 'none';
       document.getElementById('adminMenuCard').style.display = isAdmin ? 'block' : 'none';
-      
       document.getElementById('login-box').style.display = 'none';
       document.getElementById('dashboard-box').style.display = 'block';
     }
 
-    function logout() {
-      sessionStorage.removeItem('supervisor_user');
-      location.reload();
-    }
-
+    function logout() { sessionStorage.removeItem('supervisor_user'); location.reload(); }
     function openSection(id) {
       document.getElementById('dashboard-box').style.display = 'none';
       document.querySelectorAll('.form-box').forEach(box => box.classList.remove('active'));
       document.getElementById(id).classList.add('active');
     }
-
     function backToDashboard() {
       document.querySelectorAll('.form-box').forEach(box => box.classList.remove('active'));
       document.getElementById('dashboard-box').style.display = 'block';
     }
 
-    function toggleSupervisorList() {
-      const targetType = document.getElementById('targetType').value;
-      document.getElementById('supervisorsSelectContainer').style.display = (targetType === 'محدد') ? 'block' : 'none';
-    }
-
-    function initExitLogPage() {
+    // --- البرمجيات الخاصة بالاستمارة الأسبوعية ---
+    function openWeeklyFormEval() {
+      openSection('weekly-eval-box');
       const now = new Date();
       const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-      document.getElementById('autoDayName').value = days[now.getDay()];
-      document.getElementById('autoDateStr').value = now.toLocaleDateString('ar-SA');
-
-      fetchCenters();
-      fetchExitLogs();
+      document.getElementById('wDay').value = days[now.getDay()];
+      document.getElementById('wDate').value = now.toLocaleDateString('ar-SA');
+      loadTeachersForWeeklySelect();
     }
 
-    function fetchCenters() {
-      fetch(SCRIPT_URL + "?action=getCenters")
-      .then(res => res.json())
-      .then(centers => {
-        const select = document.getElementById('centerNameSelect');
-        select.innerHTML = '<option value="">-- اختر اسم المركز --</option>';
-        centers.forEach(c => {
-          select.innerHTML += `<option value="${c}">${c}</option>`;
-        });
-      });
-    }
-
-    function toggleSignatureRequirement() {
-      const absent = document.getElementById('absentCheck').checked;
-      const notes = document.getElementById('exitNotes');
-      const sigStar = document.getElementById('sigRequiredStar');
-      
-      if (absent) {
-        notes.value = "تمت زيارة المركز ولكن المديرة متغيبة.";
-        sigStar.style.display = "none";
-      } else {
-        if(notes.value === "تمت زيارة المركز ولكن المديرة متغيبة.") notes.value = "";
-        sigStar.style.display = "inline";
-      }
-    }
-
-    function initCanvas() {
-      canvas = document.getElementById('sigCanvas');
-      ctx = canvas.getContext('2d');
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = "#1a5276";
-
-      function getPos(e) {
-        const rect = canvas.getBoundingClientRect();
-        return {
-          x: (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left,
-          y: (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top
-        };
-      }
-
-      function startDraw(e) {
-        isDrawing = true;
-        hasSignature = true;
-        const p = getPos(e);
-        ctx.beginPath();
-        ctx.moveTo(p.x, p.y);
-      }
-
-      function draw(e) {
-        if (!isDrawing) return;
-        const p = getPos(e);
-        ctx.lineTo(p.x, p.y);
-        ctx.stroke();
-      }
-
-      function stopDraw() { isDrawing = false; }
-
-      canvas.addEventListener('mousedown', startDraw);
-      canvas.addEventListener('mousemove', draw);
-      canvas.addEventListener('mouseup', stopDraw);
-
-      canvas.addEventListener('touchstart', startDraw);
-      canvas.addEventListener('touchmove', draw);
-      canvas.addEventListener('touchend', stopDraw);
-    }
-
-    function clearCanvas() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      hasSignature = false;
-    }
-
-    document.getElementById('exitLogForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const absent = document.getElementById('absentCheck').checked;
-      let sigDataUrl = "";
-
-      if (!absent) {
-        if (!hasSignature) {
-          alert("الرجاء توقيع مديرة المركز الإلكتروني أولاً أو تفعيل خيار (المديرة متغيبة)!");
-          return;
-        }
-        sigDataUrl = canvas.toDataURL();
-      }
-
-      const payload = {
-        action: "saveExitLog",
-        supervisor: currentUser,
-        day: document.getElementById('autoDayName').value,
-        date: document.getElementById('autoDateStr').value,
-        center: document.getElementById('centerNameSelect').value,
-        notes: document.getElementById('exitNotes').value,
-        signature: sigDataUrl
-      };
-
-      fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
-      .then(() => {
-        alert('✅ تم حفظ كشف الخروج واحتساب يوم المتابعة بنجاح!');
-        document.getElementById('exitLogForm').reset();
-        clearCanvas();
-        toggleSignatureRequirement();
-        initExitLogPage();
-      });
-    });
-
-    function fetchExitLogs() {
-      fetch(SCRIPT_URL + "?action=getExitLogs")
-      .then(res => res.json())
-      .then(data => {
-        const tbody = document.getElementById('exitLogsTableBody');
-        const userLogs = data.filter(item => item.supervisor === currentUser);
-        document.getElementById('attendanceDaysCount').innerText = userLogs.length + " يوم";
-
-        tbody.innerHTML = data.map(l => `
-          <tr>
-            <td>${l.day} <br> <small>${l.date}</small></td>
-            <td><b>${l.supervisor}</b></td>
-            <td><b>${l.center}</b></td>
-            <td>${l.notes || 'لا يوجد'}</td>
-            <td>${l.signature ? `<img src="${l.signature}" style="max-height:35px;">` : '<span style="color:#c0392b; font-weight:bold;">متغيبة (بدون توقيع)</span>'}</td>
-          </tr>
-        `).join('');
-      });
-    }
-
-    document.getElementById('addAdminForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const targetType = document.getElementById('targetType').value;
-      let targetSupervisors = "الجميع";
-
-      if (targetType === "محدد") {
-        const selectedArr = Array.from(document.querySelectorAll('.supervisor-chk:checked')).map(cb => cb.value);
-        if (selectedArr.length === 0) {
-          alert("الرجاء اختيار مشرفة واحدة على الأقل!");
-          return;
-        }
-        targetSupervisors = selectedArr.join(", ");
-      }
-
-      const payload = {
-        action: "saveAdminForm",
-        title: document.getElementById('formTitle').value,
-        description: document.getElementById('formDesc').value,
-        url: document.getElementById('formLink').value,
-        targetSupervisors: targetSupervisors
-      };
-
-      fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
-      .then(() => {
-        alert('👑 تم نشر النموذج بنجاح بالصلاحيات المحددة!');
-        document.getElementById('addAdminForm').reset();
-        document.getElementById('supervisorsSelectContainer').style.display = 'none';
-      });
-    });
-
-    function fetchAllDataForAdmin() {
-      fetch(SCRIPT_URL + "?action=getDailyPlans")
-      .then(res => res.json())
-      .then(data => {
-        const tbody = document.getElementById('adminPlansTable');
-        tbody.innerHTML = data.map(p => `
-          <tr>
-            <td><small>${p.timestamp || '-'}</small></td>
-            <td><b>${p.supervisor}</b></td>
-            <td>${p.teacher}</td>
-            <td>${p.visitType}</td>
-            <td>${p.day} (${p.date})</td>
-            <td><a href="${p.formUrl}" target="_blank" style="color:var(--admin-color); font-weight:bold;">عرض الاستمارة</a></td>
-          </tr>
-        `).join('');
-      });
-    }
-
-    function fetchAdminForms() {
-      fetch(SCRIPT_URL + "?action=getAdminForms")
-      .then(res => res.json())
-      .then(data => {
-        const tbody = document.getElementById('supervisorFormsTable');
-        if(!data || data.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="5">لا توجد نماذج مضافة من الإدارة حالياً</td></tr>';
-          return;
-        }
-
-        const visibleForms = data.filter(f => {
-          if (isAdmin) return true;
-          if (!f.targetSupervisors || f.targetSupervisors === "الجميع") return true;
-          return f.targetSupervisors.includes(currentUser);
-        });
-
-        if (visibleForms.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="5">لا توجد نماذج موجهة لكِ حالياً</td></tr>';
-          return;
-        }
-
-        tbody.innerHTML = visibleForms.map(f => `
-          <tr>
-            <td><b>${f.title}</b></td>
-            <td>${f.description || 'لا يوجد وصف'}</td>
-            <td><span class="target-tag">${f.targetSupervisors || 'الجميع'}</span></td>
-            <td><small>${f.timestamp || '-'}</small></td>
-            <td><a href="${f.url}" target="_blank" class="btn btn-admin" style="display:inline-flex; padding:4px 12px; font-size:0.85rem;"><i class="fa-solid fa-arrow-up-right-from-square"></i> فتح النموذج</a></td>
-          </tr>
-        `).join('');
-      });
-    }
-
-    function saveDraft() {
-      const draft = {
-        teacher: document.getElementById('empName').value,
-        degree: document.getElementById('empDegree').value,
-        quranDegree: document.getElementById('quranDegree').value,
-        category: document.getElementById('empCategory').value,
-        courses: document.getElementById('empCourses').value,
-        nationality: document.getElementById('empNationality').value,
-        phone: document.getElementById('empPhone').value
-      };
-      localStorage.setItem('emp_draft', JSON.stringify(draft));
-      alert('📝 تم حفظ البيانات كمسودة محلياً!');
-    }
-
-    function loadDraft() {
-      const draft = JSON.parse(localStorage.getItem('emp_draft') || "null");
-      if (draft) {
-        document.getElementById('empName').value = draft.teacher || '';
-        document.getElementById('empDegree').value = draft.degree || 'بكالوريوس';
-        document.getElementById('quranDegree').value = draft.quranDegree || '';
-        document.getElementById('empCategory').value = draft.category || 'ناشئة';
-        document.getElementById('empCourses').value = draft.courses || '0';
-        document.getElementById('empNationality').value = draft.nationality || '';
-        document.getElementById('empPhone').value = draft.phone || '';
-      }
-    }
-
-    document.getElementById('dailyPlanForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const payload = {
-        action: "saveDailyPlan", supervisor: currentUser,
-        teacher: document.getElementById('teacherName').value,
-        period: document.getElementById('period').value,
-        day: document.getElementById('dayName').value,
-        date: document.getElementById('visitDate').value,
-        visitType: document.getElementById('visitType').value,
-        formUrl: document.getElementById('formUrl').value
-      };
-      fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
-      .then(() => {
-        alert('✅ تم حفظ الخطة بنجاح في Google Sheet!');
-        document.getElementById('dailyPlanForm').reset();
-        backToDashboard();
-      });
-    });
-
-    document.getElementById('employeeForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const payload = {
-        action: "saveEmployee", supervisor: currentUser,
-        teacher: document.getElementById('empName').value,
-        degree: document.getElementById('empDegree').value,
-        quranDegree: document.getElementById('quranDegree').value,
-        category: document.getElementById('empCategory').value,
-        courses: document.getElementById('empCourses').value,
-        nationality: document.getElementById('empNationality').value,
-        phone: document.getElementById('empPhone').value
-      };
-      fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
-      .then(() => {
-        alert('✅ تم حفظ بيانات الموظفة في Google Sheet!');
-        localStorage.removeItem('emp_draft');
-        document.getElementById('employeeForm').reset();
-        fetchEmployees();
-      });
-    });
-
-    function fetchEmployees() {
+    function loadTeachersForWeeklySelect() {
       fetch(SCRIPT_URL + "?action=getEmployees")
       .then(res => res.json())
       .then(data => {
-        const tbody = document.getElementById('empTableBody');
-        tbody.innerHTML = data.map(e => `
-          <tr>
-            <td>${e.teacher}</td><td>${e.degree}</td><td>${e.quranDegree}</td><td>${e.category}</td>
-            <td>${e.courses}</td><td>${e.nationality}</td><td>${e.phone}</td>
-            <td><button class="btn btn-danger" style="padding:2px 8px; font-size:0.75rem;" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td>
-          </tr>
-        `).join('');
+        employeesData = data;
+        const select = document.getElementById('wTeacherSelect');
+        select.innerHTML = '<option value="">-- اختر المعلمة من السجل --</option>';
+        data.forEach(emp => {
+          select.innerHTML += `<option value="${emp.teacher}">${emp.teacher}</option>`;
+        });
       });
     }
 
-    function exportExcel() {
-      var table = document.getElementById("empTable");
-      var wb = XLSX.utils.table_to_book(table, {sheet: "الموظفات"});
-      XLSX.writeFile(wb, "احوال_الموظفات.xlsx");
+    function autoFillTeacherData() {
+      const selectedTeacher = document.getElementById('wTeacherSelect').value;
+      const emp = employeesData.find(e => e.teacher === selectedTeacher);
+      if (emp) {
+        document.getElementById('wQuranDegree').value = emp.quranDegree || 'خاتمة';
+        document.getElementById('wCategory').value = emp.category || 'ناشئة';
+      }
     }
 
-    document.getElementById('attachForm').addEventListener('submit', function(e) {
+    function calculateWeeklyTotal() {
+      let sum = 0;
+      document.querySelectorAll('.w-score-1, .w-score-2, .w-score-3').forEach(input => {
+        sum += parseFloat(input.value) || 0;
+      });
+      document.getElementById('wFinalScore').innerText = sum;
+      
+      let rating = "لم تجتز";
+      if(sum >= 90) rating = "ممتاز";
+      else if(sum >= 80) rating = "جيد جداً";
+      else if(sum >= 70) rating = "جيد";
+      
+      document.getElementById('wGradeRating').innerText = rating;
+    }
+
+    document.getElementById('weeklyEvalForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const payload = {
-        action: "saveAttachment", supervisor: currentUser,
-        title: document.getElementById('attachTitle').value,
-        url: document.getElementById('attachUrl').value
+        action: "saveWeeklyForm",
+        supervisor: currentUser,
+        teacher: document.getElementById('wTeacherSelect').value,
+        center: document.getElementById('wCenter').value,
+        period: document.getElementById('wPeriod').value,
+        quranDegree: document.getElementById('wQuranDegree').value,
+        category: document.getElementById('wCategory').value,
+        day: document.getElementById('wDay').value,
+        date: document.getElementById('wDate').value,
+        lessonTitle: document.getElementById('wLessonTitle').value,
+        visitType: document.getElementById('wVisitType').value,
+        totalStudents: document.getElementById('wTotalStudents').value,
+        presentStudents: document.getElementById('wPresentStudents').value,
+        groupsCount: document.getElementById('wGroupsCount').value,
+        totalScore: document.getElementById('wFinalScore').innerText,
+        gradeRating: document.getElementById('wGradeRating').innerText,
+        notes: document.getElementById('wNotes').value
       };
+
       fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
       .then(() => {
-        alert('✅ تم إضافة المرفق بنجاح!');
-        document.getElementById('attachForm').reset();
-        fetchAttachments();
+        alert('✅ تم حفظ الاستمارة الأسبوعية بنجاح في Google Sheet!');
+        document.getElementById('weeklyEvalForm').reset();
+        openSection('weekly-menu-box');
       });
     });
 
-    function fetchAttachments() {
-      fetch(SCRIPT_URL + "?action=getAttachments")
-      .then(res => res.json())
-      .then(data => {
-        const tbody = document.getElementById('attachTableBody');
-        tbody.innerHTML = data.map(a => `
-          <tr>
-            <td><b>${a.title}</b></td>
-            <td>${a.supervisor}</td>
-            <td><a href="${a.url}" target="_blank" style="color:var(--secondary-color); font-weight:bold;">عرض الملف</a></td>
-            <td><button class="btn btn-danger" style="padding:2px 8px; font-size:0.75rem;" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td>
-          </tr>
-        `).join('');
-      });
+    // --- التوقيع والـ Canvas ---
+    let canvas, ctx, isDrawing = false, hasSignature = false;
+    function initCanvas() {
+      canvas = document.getElementById('sigCanvas');
+      if(!canvas) return;
+      ctx = canvas.getContext('2d');
+      ctx.lineWidth = 2; ctx.strokeStyle = "#1a5276";
+      function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        return { x: (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left, y: (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top };
+      }
+      function startDraw(e) { isDrawing = true; hasSignature = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); }
+      function draw(e) { if (!isDrawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }
+      function stopDraw() { isDrawing = false; }
+      canvas.addEventListener('mousedown', startDraw); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stopDraw);
+      canvas.addEventListener('touchstart', startDraw); canvas.addEventListener('touchmove', draw); canvas.addEventListener('touchend', stopDraw);
+    }
+    function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); hasSignature = false; }
+    function toggleSignatureRequirement() {
+      const absent = document.getElementById('absentCheck').checked;
+      document.getElementById('sigRequiredStar').style.display = absent ? "none" : "inline";
     }
   </script>
 </body>
