@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>منظومة الإدارة والإشراف التربوي</title>
+  <title>منظومة الإدارة والإشراف التربوي الشاملة</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
@@ -17,6 +17,7 @@
       --text-color: #2c3e50;
       --success-color: #27ae60;
       --danger-color: #c0392b;
+      --warning-color: #e67e22;
     }
 
     * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
@@ -27,10 +28,10 @@
       color: white; text-align: center; padding: 25px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
 
-    .container { max-width: 1050px; margin: 25px auto; padding: 0 15px; }
+    .container { max-width: 1100px; margin: 25px auto; padding: 0 15px; }
 
     .grid-menu {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 25px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 25px;
     }
 
     .card {
@@ -38,8 +39,7 @@
       box-shadow: 0 5px 15px rgba(0,0,0,0.06); cursor: pointer; transition: all 0.3s ease;
     }
     .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
-    .card i { font-size: 3rem; color: var(--secondary-color); margin-bottom: 12px; }
-    .card.weekly-card i { color: #e67e22; }
+    .card i { font-size: 3rem; margin-bottom: 12px; }
 
     .form-box {
       background: var(--card-bg); border-radius: 15px; padding: 25px;
@@ -67,7 +67,7 @@
       justify-content: center; flex: 1; min-width: 150px; font-size: 0.95rem;
     }
     .btn-secondary { background-color: #7f8c8d; }
-    .btn-warning { background-color: #e67e22; }
+    .btn-warning { background-color: var(--warning-color); }
     .btn-success { background-color: var(--success-color); }
     .btn-info { background-color: #2980b9; }
 
@@ -86,7 +86,6 @@
       display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;
     }
     .score-badge { background: #fff; padding: 8px; border-radius: 6px; border: 1px solid #f0e68c; }
-
     .custom-input { display: none; margin-top: 6px; border-color: #e67e22 !important; }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -96,14 +95,14 @@
 
   <header>
     <h1><i class="fa-solid fa-user-gear"></i> المنظومة الشاملة للإدارة والإشراف التربوي</h1>
-    <p>لوحة تحكم الإدارة ومتابعة أعمال المشرفات والاستشارات الأسبوعية</p>
+    <p>لوحة تحكم الإدارة الشاملة، متابعة أعمال المشرفات، والتقارير الأسبوعية</p>
   </header>
 
   <div class="container">
 
-    <!-- شاشة تسجيل الدخول -->
+    <!-- 1. شاشة تسجيل الدخول -->
     <div id="login-box" class="form-box active">
-      <div class="section-header"><h2><i class="fa-solid fa-lock"></i> تسجيل الدخول</h2></div>
+      <div class="section-header"><h2><i class="fa-solid fa-lock"></i> تسجيل الدخول للمنظومة</h2></div>
       <form id="loginForm">
         <div class="form-group">
           <label>الدخول بصفتك:</label>
@@ -124,27 +123,63 @@
       </form>
     </div>
 
-    <!-- لوحة التحكم الرئيسية -->
+    <!-- 2. لوحة التحكم الرئيسية (جميع الأيقونات والخيارات) -->
     <div id="dashboard-box" style="display: none;">
       <div class="user-bar">
         <span>مرحباً بك: <span id="currentUserName"></span></span>
-        <button class="btn btn-secondary" style="width: auto; flex: none;" onclick="logout()"><i class="fa-solid fa-power-off"></i> خروج</button>
+        <button class="btn btn-secondary" style="width: auto; flex: none;" onclick="logout()"><i class="fa-solid fa-power-off"></i> توثيق وتسجيل الخروج</button>
       </div>
 
       <div class="grid-menu">
-        <div class="card weekly-card" style="border: 2px solid #e67e22;" onclick="openSection('weekly-menu-box');">
+        <!-- أيقونة 1: الاستمارة الأسبوعية -->
+        <div class="card" style="border: 2px solid #e67e22;" onclick="openSection('weekly-menu-box');">
           <i class="fa-solid fa-calendar-week" style="color:#e67e22;"></i>
           <h3>الاستمارة الأسبوعية</h3>
           <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">تقييم سير حصة القرآن واستمارات المتابعة الأسبوعية</p>
         </div>
+
+        <!-- أيقونة 2: كشف الحضور والانصراف والخروج -->
+        <div class="card" style="border: 2px solid #27ae60;" onclick="openSection('attendance-box');">
+          <i class="fa-solid fa-clipboard-user" style="color:#27ae60;"></i>
+          <h3>كشف الحضور والخروج</h3>
+          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">متابعة حضور المشرفات وسجل الخروج اليومي</p>
+        </div>
+
+        <!-- أيقونة 3: دليل المشرفة -->
+        <div class="card" style="border: 2px solid #2980b9;" onclick="openSection('guide-box');">
+          <i class="fa-solid fa-book-open-reader" style="color:#2980b9;"></i>
+          <h3>الدليل الإشراقي</h3>
+          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">اللوائح، التعاميم، ودليل العمل الإشراقي</p>
+        </div>
+
+        <!-- أيقونة 4: إدارة المعلمات والمراكز -->
+        <div class="card" style="border: 2px solid #8e44ad;" onclick="openSection('teachers-box');">
+          <i class="fa-solid fa-users-gear" style="color:#8e44ad;"></i>
+          <h3>إدارة المعلمات</h3>
+          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">بيانات المعلمات، المراكز والمؤهلات</p>
+        </div>
+
+        <!-- أيقونة 5: الاستشارات والطلبات -->
+        <div class="card" style="border: 2px solid #16a085;" onclick="openSection('consulting-box');">
+          <i class="fa-solid fa-comments" style="color:#16a085;"></i>
+          <h3>الاستشارات والطلبات</h3>
+          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">استشارات ومعالجة الحالات التعليمية</p>
+        </div>
+
+        <!-- أيقونة 6: التقارير الإحصائية -->
+        <div class="card" style="border: 2px solid #c0392b;" onclick="openSection('reports-box');">
+          <i class="fa-solid fa-chart-line" style="color:#c0392b;"></i>
+          <h3>التقارير الإحصائية</h3>
+          <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">مخرجات الأداء العام والرسوم البيانية</p>
+        </div>
       </div>
     </div>
 
-    <!-- قائمة الخيارات الأربعة للاستمارة الأسبوعية -->
+    <!-- 3. قائمة الخيارات الأربعة للاستمارة الأسبوعية -->
     <div id="weekly-menu-box" class="form-box">
       <div class="section-header">
         <h2><i class="fa-solid fa-calendar-week" style="color:#e67e22;"></i> الخيارات الأربعة للاستمارات الأسبوعية</h2>
-        <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة</button>
+        <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة للوحة الرئيسية</button>
       </div>
 
       <div class="grid-menu" style="margin-top:20px;">
@@ -174,7 +209,7 @@
       </div>
     </div>
 
-    <!-- نموذج استمارة تقييم سير حصة القرآن المحدث بالميزات الجديدة -->
+    <!-- 4. نموذج تقييم سير حصة القرآن الذكي -->
     <div id="weekly-eval-box" class="form-box">
       <div class="section-header">
         <h2><i class="fa-solid fa-file-circle-check" style="color:#27ae60;"></i> تقرير زيارة المشرفة التعليمية لسير حصة القرآن</h2>
@@ -183,13 +218,11 @@
 
       <form id="weeklyEvalForm">
         <div class="form-grid">
-          <!-- كتابة اسم المعلمة نصياً -->
           <div class="form-group">
             <label>اسم المعلمة:</label>
             <input type="text" id="wTeacherName" required placeholder="أدخلي اسم المعلمة ثلاثياً...">
           </div>
 
-          <!-- قائمة منسدلة لاسم المركز مع خيار أخرى -->
           <div class="form-group">
             <label>اسم المركز:</label>
             <select id="wCenterSelect" onchange="toggleCustomInput('wCenterSelect', 'wCenterCustom')" required>
@@ -207,7 +240,6 @@
             <select id="wPeriod"><option value="صباحي">صباحي</option><option value="مسائي">مسائي</option></select>
           </div>
 
-          <!-- قائمة منسدلة للمؤهل مع خيار أخرى -->
           <div class="form-group">
             <label>المؤهل في القرآن:</label>
             <select id="wQuranDegreeSelect" onchange="toggleCustomInput('wQuranDegreeSelect', 'wQuranDegreeCustom')" required>
@@ -221,7 +253,6 @@
             <input type="text" id="wQuranDegreeCustom" class="custom-input" placeholder="اكتبي المؤهل هنا...">
           </div>
 
-          <!-- قائمة منسدلة للفئة مع خيار أخرى -->
           <div class="form-group">
             <label>الفئة:</label>
             <select id="wCategorySelect" onchange="toggleCustomInput('wCategorySelect', 'wCategoryCustom')" required>
@@ -235,7 +266,6 @@
             <input type="text" id="wCategoryCustom" class="custom-input" placeholder="اكتبي الفئة هنا...">
           </div>
 
-          <!-- إضافة سنوات الخبرة -->
           <div class="form-group">
             <label>سنوات الخبرة:</label>
             <input type="number" id="wExperienceYears" min="0" value="1" placeholder="عدد السنوات">
@@ -252,60 +282,51 @@
 
         <hr style="margin:20px 0;">
 
-        <!-- 1. المهارات الأساسية 70% -->
-        <h3 style="color:var(--main-color); margin-bottom:10px;">أولاً: المهارات الأساسية (الوزن النسبي: 70% | معامل الضرب: 1.794)</h3>
+        <!-- المهارات والأوزان النسبية -->
+        <h3 style="color:var(--main-color); margin-bottom:10px;">أولاً: المهارات الأساسية (70%)</h3>
         <table class="data-table">
-          <thead>
-            <tr><th>م</th><th>البند</th><th>درجة التقييم المدخلة</th></tr>
-          </thead>
+          <thead><tr><th>م</th><th>البند</th><th>الدرجة</th></tr></thead>
           <tbody>
             <tr><td>1</td><td>القراءة المثالية للمعلمة</td><td><input type="number" class="w-score-1" max="20" min="0" value="20" oninput="calculateWeeklyTotal()"> / 20</td></tr>
             <tr><td>2</td><td>التصويب أثناء تسميع الواجب</td><td><input type="number" class="w-score-1" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
-            <tr><td>3</td><td>القراءة الجماعية مع التصويب (مجموعة واحدة أو مجموعتين)</td><td><input type="number" class="w-score-1" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
-            <tr><td>4</td><td>قراءة المجيدات فأقل مع التصويب (مجموعة واحدة أو مجموعتين)</td><td><input type="number" class="w-score-1" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
+            <tr><td>3</td><td>القراءة الجماعية مع التصويب</td><td><input type="number" class="w-score-1" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
+            <tr><td>4</td><td>قراءة المجيدات فأقل مع التصويب</td><td><input type="number" class="w-score-1" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
             <tr><td>5</td><td>وضوح الصوت</td><td><input type="number" class="w-score-1" max="1" min="0" value="1" oninput="calculateWeeklyTotal()"> / 1</td></tr>
-            <tr><td>6</td><td>مراعاة الفروق الفردية (الاهتمام بالدارسات: المستوى الأقل أداء - الممتاز)</td><td><input type="number" class="w-score-1" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
+            <tr><td>6</td><td>مراعاة الفروق الفردية</td><td><input type="number" class="w-score-1" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
             <tr><td>7</td><td>المحافظة على الدوام</td><td><input type="number" class="w-score-1" max="1" min="0" value="1" oninput="calculateWeeklyTotal()"> / 1</td></tr>
           </tbody>
         </table>
 
-        <!-- 2. المهارات الثانوية 10% -->
-        <h3 style="color:var(--main-color); margin:20px 0 10px 0;">ثانياً: المهارات الثانوية (الوزن النسبي: 10% | معامل الضرب: 1.66)</h3>
+        <h3 style="color:var(--main-color); margin:20px 0 10px 0;">ثانياً: المهارات الثانوية (10%)</h3>
         <table class="data-table">
-          <thead>
-            <tr><th>م</th><th>البند</th><th>درجة التقييم المدخلة</th></tr>
-          </thead>
+          <thead><tr><th>م</th><th>البند</th><th>الدرجة</th></tr></thead>
           <tbody>
             <tr><td>1</td><td>تفقد المصاحف</td><td><input type="number" class="w-score-2" max="3" min="0" value="3" oninput="calculateWeeklyTotal()"> / 3</td></tr>
             <tr><td>2</td><td>استخدام الفصحى في الحديث</td><td><input type="number" class="w-score-2" max="3" min="0" value="3" oninput="calculateWeeklyTotal()"> / 3</td></tr>
           </tbody>
         </table>
 
-        <!-- 3. المهارات الفرعية 20% -->
-        <h3 style="color:var(--main-color); margin:20px 0 10px 0;">ثالثاً: المهارات الفرعية (الوزن النسبي: 20% | معامل الضرب: 0.3636)</h3>
+        <h3 style="color:var(--main-color); margin:20px 0 10px 0;">ثالثاً: المهارات الفرعية (20%)</h3>
         <table class="data-table">
-          <thead>
-            <tr><th>م</th><th>البند</th><th>درجة التقييم المدخلة</th></tr>
-          </thead>
+          <thead><tr><th>م</th><th>البند</th><th>الدرجة</th></tr></thead>
           <tbody>
             <tr><td>1</td><td>تقدير المسؤولية</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
-            <tr><td>2</td><td>المظهر العام والقدوة الحسنة (حسن الخلق - سلامة العقيدة)</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
-            <tr><td>3</td><td>صحة المادة العلمية (التمهيد - تثبيت العقيدة .....الخ)</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
-            <tr><td>4</td><td>التمكن من إيصال المادة العلمية (التحضير الذهني)</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
-            <tr><td>5</td><td>تحقيق الأهداف التربوية (تثبيت العقيدة والربط بالواقع)</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
+            <tr><td>2</td><td>المظهر العام والقدوة الحسنة</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
+            <tr><td>3</td><td>صحة المادة العلمية والتمهيد</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
+            <tr><td>4</td><td>التمكن من إيصال المادة العلمية</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
+            <tr><td>5</td><td>تحقيق الأهداف التربوية والربط بالواقع</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
             <tr><td>6</td><td>الاهتمام بالنمو المعرفي</td><td><input type="number" class="w-score-3" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
-            <tr><td>7</td><td>التعامل مع الجميع بحكمة واتزان</td><td><input type="number" class="w-score-3" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
+            <tr><td>7</td><td>التعامل بحكمة واتزان</td><td><input type="number" class="w-score-3" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
             <tr><td>8</td><td>التنويع في طرق التدريس</td><td><input type="number" class="w-score-3" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
             <tr><td>9</td><td>إدارة المجموعات</td><td><input type="number" class="w-score-3" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
-            <tr><td>10</td><td>التحضير الجيد كتابياً (صياغة الأهداف - توزيع المنهج)</td><td><input type="number" class="w-score-3" max="3" min="0" value="3" oninput="calculateWeeklyTotal()"> / 3</td></tr>
-            <tr><td>11</td><td>الاستخدام الأمثل للوسائل التعليمية (السبورة)</td><td><input type="number" class="w-score-3" max="3" min="0" value="3" oninput="calculateWeeklyTotal()"> / 3</td></tr>
-            <tr><td>12</td><td>الغلق والتطبيق (التأكد من استيعاب الدارسات)</td><td><input type="number" class="w-score-3" max="3" min="0" value="3" oninput="calculateWeeklyTotal()"> / 3</td></tr>
+            <tr><td>10</td><td>التحضير الجيد كتابياً</td><td><input type="number" class="w-score-3" max="3" min="0" value="3" oninput="calculateWeeklyTotal()"> / 3</td></tr>
+            <tr><td>11</td><td>الاستخدام الأمثل للوسائل (السبورة)</td><td><input type="number" class="w-score-3" max="3" min="0" value="3" oninput="calculateWeeklyTotal()"> / 3</td></tr>
+            <tr><td>12</td><td>الغلق والتطبيق</td><td><input type="number" class="w-score-3" max="3" min="0" value="3" oninput="calculateWeeklyTotal()"> / 3</td></tr>
             <tr><td>13</td><td>ضبط الصف</td><td><input type="number" class="w-score-3" max="2" min="0" value="2" oninput="calculateWeeklyTotal()"> / 2</td></tr>
-            <tr><td>14</td><td>التشويق في أجزاء الدرس (استثارة الدافعية للتعلم)</td><td><input type="number" class="w-score-3" max="3" min="0" value="3" oninput="calculateWeeklyTotal()"> / 3</td></tr>
+            <tr><td>14</td><td>التشويق واستثارة الدافعية</td><td><input type="number" class="w-score-3" max="3" min="0" value="3" oninput="calculateWeeklyTotal()"> / 3</td></tr>
           </tbody>
         </table>
 
-        <!-- بطاقة النتائج والتقدير الآلي -->
         <div class="score-summary">
           <div class="score-badge">الدرجة الخام (التقييم): <br><span id="wRawScore" style="color:var(--secondary-color); font-size:1.2rem;">100</span> / 100</div>
           <div class="score-badge">الدرجة الموزونة الكلية: <br><span id="wWeightedScore" style="color:var(--admin-color); font-size:1.3rem;">100</span> / 100</div>
@@ -317,14 +338,12 @@
           <textarea id="wNotes" rows="3" placeholder="أدخلي أي ملاحظات أو توصيات للمعلمة..."></textarea>
         </div>
 
-        <!-- أزرار الحفظ المزدوجة (مسودة / إرسال وحفظ بالموقع وقوقل شيت) -->
         <div class="btn-group">
           <button type="button" class="btn btn-info" onclick="saveDraft()"><i class="fa-solid fa-floppy-disk"></i> حفظ كمسودة بالمرقع</button>
           <button type="submit" class="btn btn-warning"><i class="fa-solid fa-cloud-arrow-up"></i> حفظ وإرسال (للموقع وقوقل شيت)</button>
         </div>
       </form>
 
-      <!-- جدول الاستمارات المحفوظة بالموقع -->
       <hr style="margin: 30px 0 15px 0;">
       <h3 style="color:var(--main-color);"><i class="fa-solid fa-folder-closed"></i> الاستمارات المحفوظة والمسودات في الموقع</h3>
       <table class="data-table">
@@ -343,6 +362,51 @@
           <tr><td colspan="7">لا توجد استمارات محفوظة حالياً</td></tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- 5. شاشة كشف الحضور والانصراف والخروج -->
+    <div id="attendance-box" class="form-box">
+      <div class="section-header">
+        <h2><i class="fa-solid fa-clipboard-user" style="color:#27ae60;"></i> كشف الحضور والانصراف وسجل الخروج</h2>
+        <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة للوحة الرئيسية</button>
+      </div>
+      <p style="margin-bottom:15px; color:#555;">يتم توثيق وتوجيه حركة خروج المشرفة تلقائياً عند الضغط على زر "تسجيل الخروج" بالشريط العلوي.</p>
+    </div>
+
+    <!-- 6. شاشة الدليل الإشراقي -->
+    <div id="guide-box" class="form-box">
+      <div class="section-header">
+        <h2><i class="fa-solid fa-book-open-reader" style="color:#2980b9;"></i> الدليل الإشراقي والتعاميم</h2>
+        <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة للوحة الرئيسية</button>
+      </div>
+      <p>قسم الدليل الإشراقي واللوائح المنظمة لأعمال الإشراف التربوي.</p>
+    </div>
+
+    <!-- 7. شاشة إدارة المعلمات -->
+    <div id="teachers-box" class="form-box">
+      <div class="section-header">
+        <h2><i class="fa-solid fa-users-gear" style="color:#8e44ad;"></i> سجل وإدارة المعلمات والمراكز</h2>
+        <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة للوحة الرئيسية</button>
+      </div>
+      <p>بيانات وسجلات المعلمات والمراكز القرآنية المسجلة.</p>
+    </div>
+
+    <!-- 8. شاشة الاستشارات -->
+    <div id="consulting-box" class="form-box">
+      <div class="section-header">
+        <h2><i class="fa-solid fa-comments" style="color:#16a085;"></i> قسم الاستشارات التربوية والطلبات</h2>
+        <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة للوحة الرئيسية</button>
+      </div>
+      <p>تقديم واستقبال الاستشارات التعليمية والإشرافية.</p>
+    </div>
+
+    <!-- 9. شاشة التقارير الإحصائية -->
+    <div id="reports-box" class="form-box">
+      <div class="section-header">
+        <h2><i class="fa-solid fa-chart-line" style="color:#c0392b;"></i> التقارير الإحصائية العامة</h2>
+        <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة للوحة الرئيسية</button>
+      </div>
+      <p>رسوم بيانية وملخصات الأداء الإشراقي والتعليمي.</p>
     </div>
 
   </div>
@@ -375,18 +439,35 @@
       document.getElementById('dashboard-box').style.display = 'block';
     }
 
-    function logout() { sessionStorage.removeItem('supervisor_user'); location.reload(); }
+    // تسجيل الخروج وتوثيقه آلياً في كشف الخروج بشيت قوقل
+    function logout() {
+      if (confirm("هل أنتِ متأكدة من توثيق وتسجيل الخروج؟")) {
+        const payload = {
+          action: "logLogout",
+          supervisor: currentUser
+        };
+
+        fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        }).finally(() => {
+          sessionStorage.removeItem('supervisor_user');
+          location.reload();
+        });
+      }
+    }
+
     function openSection(id) {
       document.getElementById('dashboard-box').style.display = 'none';
       document.querySelectorAll('.form-box').forEach(box => box.classList.remove('active'));
       document.getElementById(id).classList.add('active');
     }
+
     function backToDashboard() {
       document.querySelectorAll('.form-box').forEach(box => box.classList.remove('active'));
       document.getElementById('dashboard-box').style.display = 'block';
     }
 
-    // --- إظهار وإخفاء حقل الإدخال اليدوي عند اختيار "أخرى" ---
     function toggleCustomInput(selectId, customInputId) {
       const select = document.getElementById(selectId);
       const customInput = document.getElementById(customInputId);
@@ -400,7 +481,6 @@
       }
     }
 
-    // جلب القيمة النهائية سواء من الاختيار أو من الإدخال اليدوي
     function getSelectedOrCustomValue(selectId, customInputId) {
       const selectVal = document.getElementById(selectId).value;
       if (selectVal === "أخرى") {
@@ -419,7 +499,6 @@
       loadSavedFormsFromStorage();
     }
 
-    // --- حساب الدرجة الموزونة وسلم التقديرات ---
     function calculateWeeklyTotal() {
       let rawSum1 = 0, rawSum2 = 0, rawSum3 = 0;
 
@@ -428,7 +507,6 @@
       document.querySelectorAll('.w-score-3').forEach(input => { rawSum3 += parseFloat(input.value) || 0; });
 
       const totalRawScore = rawSum1 + rawSum2 + rawSum3;
-
       const weighted1 = rawSum1 * 1.794;
       const weighted2 = rawSum2 * 1.66;
       const weighted3 = rawSum3 * 0.3636;
@@ -447,7 +525,6 @@
       document.getElementById('wGradeRating').innerText = rating;
     }
 
-    // --- جمع كائن البيانات للتعامل معه للحفظ أو المسودة ---
     function getFormDataObject(status = "مرسلة") {
       return {
         id: Date.now(),
@@ -473,7 +550,6 @@
       };
     }
 
-    // --- حفظ كمسودة في الموقع ---
     function saveDraft() {
       const data = getFormDataObject("مسودة");
       if(!data.teacher) {
@@ -483,23 +559,20 @@
       let savedForms = JSON.parse(localStorage.getItem('quran_weekly_forms') || "[]");
       savedForms.push(data);
       localStorage.setItem('quran_weekly_forms', JSON.stringify(savedForms));
-      alert("📝 تم حفظ الاستمارة كمسودة في الموقع بنجاح!");
+      alert("📝 تم حفظ الاستمارة كمسودة بنجاح!");
       loadSavedFormsFromStorage();
     }
 
-    // --- حفظ واستغلال الإرسال (للموقع وقوقل شيت) ---
     document.getElementById('weeklyEvalForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const payload = getFormDataObject("تم الحفظ والإرسال");
       payload.action = "saveWeeklyForm";
 
-      // 1. الحفظ بالموقع تلقائياً
       let savedForms = JSON.parse(localStorage.getItem('quran_weekly_forms') || "[]");
       savedForms.push(payload);
       localStorage.setItem('quran_weekly_forms', JSON.stringify(savedForms));
       loadSavedFormsFromStorage();
 
-      // 2. الحفظ والإرسال لقوقل شيت
       fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
       .then(() => {
         alert('✅ تم حفظ الاستمارة بنجاح في الموقع وفي قوقل شيت (Google Sheets)!');
@@ -507,11 +580,10 @@
         calculateWeeklyTotal();
       })
       .catch(() => {
-        alert('⚠️️ تم الحفظ في الموقع بنجاح، وتطذر الإرسال لقوقل شيت بسبب الشبكة.');
+        alert('⚠ تم الحفظ في الموقع بنجاح، وتطذر الإرسال لقوقل شيت بسبب الشبكة.');
       });
     });
 
-    // --- عرض الاستمارات المحفوظة والمسودات في جدول أسفل الاستمارة ---
     function loadSavedFormsFromStorage() {
       const savedForms = JSON.parse(localStorage.getItem('quran_weekly_forms') || "[]");
       const tbody = document.getElementById('savedFormsTableBody');
