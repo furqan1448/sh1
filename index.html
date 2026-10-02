@@ -96,7 +96,6 @@
     .stats-card h4 { color: var(--main-color); margin: 0; font-size: 1.1rem; }
     .stats-card .count { font-size: 1.6rem; font-weight: bold; color: var(--admin-color); }
 
-    /* اللوحة والتوقيع */
     .signature-container {
       border: 2px dashed #b2bec3; border-radius: 8px; background: #fff; text-align: center; padding: 10px; position: relative;
     }
@@ -145,14 +144,12 @@
       </div>
 
       <div class="grid-menu">
-        <!-- أيقونة الإدارة المتحكمة (تظهر فقط للإدارة) -->
         <div id="adminMenuCard" class="card admin-card" style="display:none;" onclick="openSection('admin-control-box'); fetchAllDataForAdmin();">
           <i class="fa-solid fa-user-shield"></i>
           <h3>لوحة الإدارة المتحكمة</h3>
           <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">متابعة جميع أعمال المشرفات وإضافة النماذج</p>
         </div>
 
-        <!-- أيقونة كشف الخروج الجديد -->
         <div class="card" style="border: 2px solid var(--admin-color);" onclick="openSection('exit-log-box'); initExitLogPage();">
           <i class="fa-solid fa-clipboard-user" style="color:var(--admin-color);"></i>
           <h3>كشف الخروج</h3>
@@ -192,7 +189,6 @@
         <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة</button>
       </div>
 
-      <!-- بطاقة إحصائيات أيام الحضور للمشرفة -->
       <div class="stats-card">
         <div>
           <h4><i class="fa-solid fa-calendar-days"></i> إجمالي عدد أيام الحضور والمتابعة للمراكز:</h4>
@@ -201,7 +197,6 @@
         <div class="count" id="attendanceDaysCount">0 يوم</div>
       </div>
 
-      <!-- نموذج تسجيل الخروج الميداني -->
       <form id="exitLogForm">
         <div class="form-grid">
           <div class="form-group">
@@ -219,7 +214,6 @@
             </select>
           </div>
 
-          <!-- خيار تغيب المديرة -->
           <div class="form-group full-width" style="background:#fff3cd; padding:12px; border-radius:8px; border:1px solid #ffeeba;">
             <label style="color:#856404; cursor:pointer;">
               <input type="checkbox" id="absentCheck" onchange="toggleSignatureRequirement()">
@@ -233,7 +227,6 @@
             <textarea id="exitNotes" rows="2" placeholder="أدخلي أي ملاحظات إضافية حول الزيارة..."></textarea>
           </div>
 
-          <!-- منطقة التوقيع الالكتروني للمديرة -->
           <div class="form-group full-width" id="signatureArea">
             <label><i class="fa-solid fa-signature"></i> توقيع مديرة المركز الإلكتروني <span id="sigRequiredStar" style="color:red;">*</span>:</label>
             <div class="signature-container">
@@ -265,14 +258,13 @@
       </table>
     </div>
 
-    <!-- 1. لوحة تحكم الإدارة المتحكمة (Admin) -->
+    <!-- لوحة تحكم الإدارة المتحكمة -->
     <div id="admin-control-box" class="form-box">
       <div class="section-header">
         <h2><i class="fa-solid fa-user-shield" style="color:var(--admin-color);"></i> لوحة متابعة الإدارة المتحكمة</h2>
         <button class="btn btn-secondary" style="width:auto;" onclick="backToDashboard()">عودة</button>
       </div>
 
-      <!-- إضافة نموذج جديد من الإدارة مع تخصيص الموجه إليهن -->
       <div style="background:#f9f4fc; padding:18px; border-radius:10px; border:1px solid #e1d5e7; margin-bottom:25px;">
         <h3 style="color:var(--admin-color); margin-bottom:12px;"><i class="fa-solid fa-plus-circle"></i> إضافة ونشر نموذج/استمارة جديدة:</h3>
         <form id="addAdminForm">
@@ -320,7 +312,7 @@
       </table>
     </div>
 
-    <!-- 2. قسم نماذج المشرفة -->
+    <!-- قسم نماذج المشرفة -->
     <div id="forms-box" class="form-box">
       <div class="section-header">
         <h2><i class="fa-solid fa-file-signature"></i> نماذج واستمارات المشرفة</h2>
@@ -342,7 +334,7 @@
       </table>
     </div>
 
-    <!-- 3. قسم الخطة اليومية -->
+    <!-- قسم الخطة اليومية -->
     <div id="daily-plan-box" class="form-box">
       <div class="section-header">
         <h2><i class="fa-solid fa-calendar-day"></i> الخطة اليومية</h2>
@@ -381,7 +373,7 @@
       </form>
     </div>
 
-    <!-- 4. قسم أحوال الموظفات -->
+    <!-- قسم أحوال الموظفات -->
     <div id="employees-box" class="form-box">
       <div class="section-header">
         <h2><i class="fa-solid fa-users"></i> أحوال الموظفات</h2>
@@ -438,7 +430,7 @@
       </table>
     </div>
 
-    <!-- 5. قسم المرفقات -->
+    <!-- قسم المرفقات -->
     <div id="attachments-box" class="form-box">
       <div class="section-header">
         <h2><i class="fa-solid fa-folder-open"></i> المرفقات والروابط العامة</h2>
@@ -470,7 +462,6 @@
     let currentUser = "";
     let isAdmin = false;
 
-    // متغيرة الرسم للتوقيع
     let canvas, ctx, isDrawing = false, hasSignature = false;
 
     window.onload = function() {
@@ -524,9 +515,7 @@
       document.getElementById('supervisorsSelectContainer').style.display = (targetType === 'محدد') ? 'block' : 'none';
     }
 
-    // --- إعدادات كشف الخروج والتوقيع ---
     function initExitLogPage() {
-      // تعبئة اليوم والتاريخ تلقائياً
       const now = new Date();
       const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
       document.getElementById('autoDayName').value = days[now.getDay()];
@@ -562,7 +551,6 @@
       }
     }
 
-    // إعداد لوحة التوقيع
     function initCanvas() {
       canvas = document.getElementById('sigCanvas');
       ctx = canvas.getContext('2d');
@@ -608,7 +596,6 @@
       hasSignature = false;
     }
 
-    // حفظ كشف الخروج
     document.getElementById('exitLogForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
@@ -648,8 +635,6 @@
       .then(res => res.json())
       .then(data => {
         const tbody = document.getElementById('exitLogsTableBody');
-        
-        // حساب عدد أيام حضور المشرفة المسجلة دخول
         const userLogs = data.filter(item => item.supervisor === currentUser);
         document.getElementById('attendanceDaysCount').innerText = userLogs.length + " يوم";
 
@@ -665,7 +650,6 @@
       });
     }
 
-    // --- وظائف الإدارة المتحكمة ---
     document.getElementById('addAdminForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const targetType = document.getElementById('targetType').value;
