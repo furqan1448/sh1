@@ -1,11 +1,11 @@
 // ================= ================= =================
-// سكريبت الإدارة والإشراف المتكامل مع تخصيص المستهدفين بالنماذج
+// سكريبت الإدارة والإشراف المتكامل مع كشف الخروج والتوقيع
 // ================= ================= =================
 
 function setupDatabase() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   
-  // 1. ورقة المستخدمين والحسابات
+  // 1. المستخدمين
   var usersSheet = ss.getSheetByName("Users");
   if (!usersSheet) {
     usersSheet = ss.insertSheet("Users");
@@ -31,18 +31,36 @@ function setupDatabase() {
     empSheet.appendRow(["تاريخ التسجيل", "المشرفة", "اسم المعلمة", "المؤهل العلمي", "المؤهل في القرآن", "الفئة", "عدد الدورات", "الجنسية", "رقم الهاتف"]);
   }
 
-  // 4. المرفقات العامة
+  // 4. المرفقات
   var attachSheet = ss.getSheetByName("Attachments");
   if (!attachSheet) {
     attachSheet = ss.insertSheet("Attachments");
     attachSheet.appendRow(["تاريخ التسجيل", "المشرفة", "عنوان المرفق", "رابط المرفق"]);
   }
 
-  // 5. نماذج الإدارة للمشرفات (AdminForms)
+  // 5. نماذج الإدارة
   var adminFormsSheet = ss.getSheetByName("AdminForms");
   if (!adminFormsSheet) {
     adminFormsSheet = ss.insertSheet("AdminForms");
     adminFormsSheet.appendRow(["تاريخ النشر", "عنوان النموذج", "وصف النموذج", "رابط النموذج", "المستهدفون"]);
+  }
+
+  // 6. قائمة أسماء المراكز (Centers)
+  var centersSheet = ss.getSheetByName("Centers");
+  if (!centersSheet) {
+    centersSheet = ss.insertSheet("Centers");
+    centersSheet.appendRow(["اسم المركز"]);
+    centersSheet.appendRow(["مركز الفرقان"]);
+    centersSheet.appendRow(["مركز النور"]);
+    centersSheet.appendRow(["مركز التبيان"]);
+    centersSheet.appendRow(["مركز البيان"]);
+  }
+
+  // 7. كشف الخروج (ExitLogs)
+  var exitLogsSheet = ss.getSheetByName("ExitLogs");
+  if (!exitLogsSheet) {
+    exitLogsSheet = ss.insertSheet("ExitLogs");
+    exitLogsSheet.appendRow(["تاريخ التسجيل", "اسم المشرفة", "اليوم", "التاريخ", "اسم المركز", "الملاحظات", "توقيع المديرة"]);
   }
 
   var defaultSheet = ss.getSheetByName("Sheet1") || ss.getSheetByName("ورقة1");
@@ -56,6 +74,31 @@ function doGet(e) {
   var action = e ? e.parameter.action : "";
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   
+  if (action == "getCenters") {
+    var sheet = ss.getSheetByName("Centers");
+    var data = sheet.getDataRange().getValues();
+    var centers = [];
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0]) centers.push(data[i][0]);
+    }
+    return ContentService.createTextOutput(JSON.stringify(centers)).setMimeType(ContentService.MimeType.JSON);
+  }
+
+  if (action == "getExitLogs") {
+    var sheet = ss.getSheetByName("ExitLogs");
+    var data = sheet.getDataRange().getValues();
+    var logs = [];
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][1]) {
+        logs.push({
+          timestamp: data[i][0], supervisor: data[i][1], day: data[i][2],
+          date: data[i][3], center: data[i][4], notes: data[i][5], signature: data[i][6]
+        });
+      }
+    }
+    return ContentService.createTextOutput(JSON.stringify(logs.reverse())).setMimeType(ContentService.MimeType.JSON);
+  }
+
   if (action == "getDailyPlans") {
     var sheet = ss.getSheetByName("DailyPlans");
     var data = sheet.getDataRange().getValues();
@@ -106,11 +149,8 @@ function doGet(e) {
     for (var i = 1; i < data.length; i++) {
       if (data[i][1]) {
         forms.push({ 
-          timestamp: data[i][0], 
-          title: data[i][1], 
-          description: data[i][2], 
-          url: data[i][3],
-          targetSupervisors: data[i][4] || "الجميع"
+          timestamp: data[i][0], title: data[i][1], description: data[i][2], 
+          url: data[i][3], targetSupervisors: data[i][4] || "الجميع"
         });
       }
     }
@@ -123,6 +163,20 @@ function doPost(e) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var data = JSON.parse(e.postData.contents);
   
+  if (data.action == "saveExitLog") {
+    var sheet = ss.getSheetByName("ExitLogs");
+    sheet.appendRow([
+      new Date().toLocaleString('ar-SA'),
+      data.supervisor,
+      data.day,
+      data.date,
+      data.center,
+      data.notes,
+      data.signature
+    ]);
+    return ContentService.createTextOutput(JSON.stringify({"status": "success"})).setMimeType(ContentService.MimeType.JSON);
+  }
+
   if (data.action == "saveDailyPlan") {
     var sheet = ss.getSheetByName("DailyPlans");
     sheet.appendRow([new Date().toLocaleString('ar-SA'), data.supervisor, data.teacher, data.period, data.day, data.date, data.visitType, data.formUrl]);
