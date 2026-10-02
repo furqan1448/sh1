@@ -151,7 +151,7 @@
           <p style="color:#7f8c8d; font-size: 0.85rem; margin-top:5px;">متابعة جميع أعمال المشرفات وإضافة النماذج</p>
         </div>
 
-        <!-- أيقونة الاستمارة الأسبوعية الجديدة -->
+        <!-- أيقونة الاستمارة الأسبوعية -->
         <div class="card weekly-card" style="border: 2px solid #e67e22;" onclick="openSection('weekly-menu-box');">
           <i class="fa-solid fa-calendar-week" style="color:#e67e22;"></i>
           <h3>الاستمارة الأسبوعية</h3>
@@ -225,7 +225,7 @@
       </div>
     </div>
 
-    <!-- نموذج استمارة تقييم سير حصة القرآن الذكي -->
+    <!-- نموذج استمارة تقييم سير حصة القرآن المكتمل بالكامل (23 بنداً) -->
     <div id="weekly-eval-box" class="form-box">
       <div class="section-header">
         <h2><i class="fa-solid fa-file-circle-check" style="color:#27ae60;"></i> تقرير زيارة المشرفة التعليمية لسير حصة القرآن</h2>
@@ -258,6 +258,7 @@
 
         <hr style="margin:20px 0;">
 
+        <!-- 1. المهارات الأساسية 70% -->
         <h3 style="color:var(--main-color); margin-bottom:10px;">أولاً: المهارات الأساسية (70%)</h3>
         <table class="data-table">
           <thead>
@@ -266,14 +267,15 @@
           <tbody>
             <tr><td>1</td><td>القراءة المثالية للمعلمة</td><td><input type="number" class="w-score-1" max="20" min="0" value="20" oninput="calculateWeeklyTotal()"> / 20</td></tr>
             <tr><td>2</td><td>التصويب أثناء تسميع الواجب</td><td><input type="number" class="w-score-1" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
-            <tr><td>3</td><td>القراءة الجماعية مع التصويب</td><td><input type="number" class="w-score-1" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
-            <tr><td>4</td><td>قراءة المجيدات فأقل مع التصويب</td><td><input type="number" class="w-score-1" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
+            <tr><td>3</td><td>القراءة الجماعية مع التصويب (مجموعة واحدة أو مجموعتين)</td><td><input type="number" class="w-score-1" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
+            <tr><td>4</td><td>قراءة المجيدات فأقل مع التصويب (مجموعة واحدة أو مجموعتين)</td><td><input type="number" class="w-score-1" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
             <tr><td>5</td><td>وضوح الصوت</td><td><input type="number" class="w-score-1" max="1" min="0" value="1" oninput="calculateWeeklyTotal()"> / 1</td></tr>
-            <tr><td>6</td><td>مراعاة الفروق الفردية للدارسات</td><td><input type="number" class="w-score-1" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
+            <tr><td>6</td><td>مراعاة الفروق الفردية (الاهتمام بالدارسات: المستوى الأقل أداء - الممتاز)</td><td><input type="number" class="w-score-1" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
             <tr><td>7</td><td>المحافظة على الدوام</td><td><input type="number" class="w-score-1" max="1" min="0" value="1" oninput="calculateWeeklyTotal()"> / 1</td></tr>
           </tbody>
         </table>
 
+        <!-- 2. المهارات الثانوية 10% -->
         <h3 style="color:var(--main-color); margin:20px 0 10px 0;">ثانياً: المهارات الثانوية (10%)</h3>
         <table class="data-table">
           <thead>
@@ -285,17 +287,27 @@
           </tbody>
         </table>
 
+        <!-- 3. المهارات الفرعية 20% (جميع البنود الـ 14 مكتملة) -->
         <h3 style="color:var(--main-color); margin:20px 0 10px 0;">ثالثاً: المهارات الفرعية (20%)</h3>
         <table class="data-table">
           <thead>
             <tr><th>م</th><th>البند</th><th>الدرجة المستحقة</th></tr>
           </thead>
           <tbody>
-            <tr><td>1</td><td>تقدير المسؤولية والإنضباط</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
-            <tr><td>2</td><td>المظهر العام والقدوة الحسنة</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
-            <tr><td>3</td><td>صحة المادة العلمية (التمهيد وتثبيت العقيدة)</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
-            <tr><td>4</td><td>التمكن من إيصال المادة والتحضير الذهني</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
-            <tr><td>5</td><td>تحقيق الأهداف التربوية والربط بالواقع</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
+            <tr><td>1</td><td>تقدير المسؤولية</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
+            <tr><td>2</td><td>المظهر العام والقدوة الحسنة (حسن الخلق - سلامة العقيدة)</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
+            <tr><td>3</td><td>صحة المادة العلمية (التمهيد - تثبيت العقيدة .....الخ)</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
+            <tr><td>4</td><td>التمكن من إيصال المادة العلمية (التحضير الذهني)</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
+            <tr><td>5</td><td>تحقيق الأهداف التربوية (تثبيت العقيدة والربط بالواقع)</td><td><input type="number" class="w-score-3" max="5" min="0" value="5" oninput="calculateWeeklyTotal()"> / 5</td></tr>
+            <tr><td>6</td><td>الاهتمام بالنمو المعرفي</td><td><input type="number" class="w-score-3" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
+            <tr><td>7</td><td>التعامل مع الجميع بحكمة واتزان</td><td><input type="number" class="w-score-3" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
+            <tr><td>8</td><td>التنويع في طرق التدريس</td><td><input type="number" class="w-score-3" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
+            <tr><td>9</td><td>إدارة المجموعات</td><td><input type="number" class="w-score-3" max="4" min="0" value="4" oninput="calculateWeeklyTotal()"> / 4</td></tr>
+            <tr><td>10</td><td>التحضير الجيد كتابياً (صياغة الأهداف - توزيع المنهج)</td><td><input type="number" class="w-score-3" max="3" min="0" value="3" oninput="calculateWeeklyTotal()"> / 3</td></tr>
+            <tr><td>11</td><td>الاستخدام الأمثل للوسائل التعليمية (السبورة)</td><td><input type="number" class="w-score-3" max="3" min="0" value="3" oninput="calculateWeeklyTotal()"> / 3</td></tr>
+            <tr><td>12</td><td>الغلق والتطبيق (التأكد من استيعاب الدارسات)</td><td><input type="number" class="w-score-3" max="3" min="0" value="3" oninput="calculateWeeklyTotal()"> / 3</td></tr>
+            <tr><td>13</td><td>ضبط الصف</td><td><input type="number" class="w-score-3" max="2" min="0" value="2" oninput="calculateWeeklyTotal()"> / 2</td></tr>
+            <tr><td>14</td><td>التشويق في أجزاء الدرس (استثارة الدافعية للتعلم)</td><td><input type="number" class="w-score-3" max="3" min="0" value="3" oninput="calculateWeeklyTotal()"> / 3</td></tr>
           </tbody>
         </table>
 
@@ -314,7 +326,7 @@
       </form>
     </div>
 
-    <!-- باقي الأقسام المعتادة (كشف الخروج، الإدارة، الخطة اليومية، أحوال الموظفات، المرفقات) -->
+    <!-- قسم كشف الخروج -->
     <div id="exit-log-box" class="form-box">
       <div class="section-header">
         <h2><i class="fa-solid fa-clipboard-user" style="color:var(--admin-color);"></i> كشف الخروج والزيارات الميدانية</h2>
@@ -358,27 +370,31 @@
       </form>
     </div>
 
-    <!-- باقي النوافذ البرمجية -->
+    <!-- لوحة تحكم الإدارة المتحكمة -->
     <div id="admin-control-box" class="form-box">
       <div class="section-header"><h2><i class="fa-solid fa-user-shield"></i> لوحة الإدارة المتحكمة</h2><button class="btn btn-secondary" onclick="backToDashboard()">عودة</button></div>
       <table class="data-table"><thead><tr><th>تاريخ التسجيل</th><th>اسم المشرفة</th><th>المعلمة المستهدفة</th><th>نوع الزيارة</th><th>اليوم والتاريخ</th><th>الاستمارة</th></tr></thead><tbody id="adminPlansTable"></tbody></table>
     </div>
 
+    <!-- قسم الخطة اليومية -->
     <div id="daily-plan-box" class="form-box">
       <div class="section-header"><h2><i class="fa-solid fa-calendar-day"></i> الخطة اليومية</h2><button class="btn btn-secondary" onclick="backToDashboard()">عودة</button></div>
       <form id="dailyPlanForm"><div class="form-grid"><div class="form-group"><label>اسم المعلمة:</label><input type="text" id="teacherName" required></div><div class="form-group"><label>رابط الاستمارة:</label><input type="url" id="formUrl" required></div></div><button type="submit" class="btn btn-success">حفظ في قوقل شيت</button></form>
     </div>
 
+    <!-- قسم أحوال الموظفات -->
     <div id="employees-box" class="form-box">
       <div class="section-header"><h2><i class="fa-solid fa-users"></i> أحوال الموظفات</h2><button class="btn btn-secondary" onclick="backToDashboard()">عودة</button></div>
       <table class="data-table" id="empTable"><thead><tr><th>اسم المعلمة</th><th>المؤهل</th><th>مؤهل القرآن</th><th>الفئة</th><th>الجنسية</th><th>الهاتف</th></tr></thead><tbody id="empTableBody"></tbody></table>
     </div>
 
+    <!-- قسم نماذج المشرفة -->
     <div id="forms-box" class="form-box">
       <div class="section-header"><h2><i class="fa-solid fa-file-signature"></i> نماذج المشرفة</h2><button class="btn btn-secondary" onclick="backToDashboard()">عودة</button></div>
       <table class="data-table"><thead><tr><th>عنوان النموذج</th><th>الوصف</th><th>الرابط</th></tr></thead><tbody id="supervisorFormsTable"></tbody></table>
     </div>
 
+    <!-- قسم المرفقات -->
     <div id="attachments-box" class="form-box">
       <div class="section-header"><h2><i class="fa-solid fa-folder-open"></i> المرفقات العامة</h2><button class="btn btn-secondary" onclick="backToDashboard()">عودة</button></div>
       <table class="data-table"><thead><tr><th>عنوان المرفق</th><th>الرابط</th></tr></thead><tbody id="attachTableBody"></tbody></table>
@@ -387,7 +403,7 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyFV_kYmCcrefr6f1AWIFIretPzP8oOlEGLx89vUIb-kYh_eGaxrmGNH1IwlDHgePDV3w/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxLOCHCNqqxzXDL9i-CzO8C1dlL9a_86HxP1SmGptfSZvjDIYgF3-5UEdzQTdpi6OxALA/exec";
     let currentUser = "";
     let isAdmin = false;
     let employeesData = [];
