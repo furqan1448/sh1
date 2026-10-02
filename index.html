@@ -39,7 +39,6 @@
     }
     .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
     .card i { font-size: 3rem; color: var(--secondary-color); margin-bottom: 12px; }
-    .card.admin-card i { color: var(--admin-color); }
     .card.weekly-card i { color: #e67e22; }
 
     .form-box {
@@ -61,13 +60,16 @@
       width: 100%; padding: 10px 12px; border: 1px solid #dcdfe6; border-radius: 8px; font-size: 0.95rem;
     }
 
+    .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
     .btn {
-      background-color: var(--main-color); color: white; padding: 10px 20px; border: none;
+      background-color: var(--main-color); color: white; padding: 12px 20px; border: none;
       border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;
-      justify-content: center; flex: 1; min-width: 140px;
+      justify-content: center; flex: 1; min-width: 150px; font-size: 0.95rem;
     }
     .btn-secondary { background-color: #7f8c8d; }
     .btn-warning { background-color: #e67e22; }
+    .btn-success { background-color: var(--success-color); }
+    .btn-info { background-color: #2980b9; }
 
     .user-bar {
       background: #eaf2f8; padding: 12px 20px; border-radius: 10px; margin-bottom: 20px;
@@ -84,6 +86,8 @@
       display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;
     }
     .score-badge { background: #fff; padding: 8px; border-radius: 6px; border: 1px solid #f0e68c; }
+
+    .custom-input { display: none; margin-top: 6px; border-color: #e67e22 !important; }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
@@ -170,7 +174,7 @@
       </div>
     </div>
 
-    <!-- نموذج استمارة تقييم سير حصة القرآن (23 بنداً بالكامل) -->
+    <!-- نموذج استمارة تقييم سير حصة القرآن المحدث بالميزات الجديدة -->
     <div id="weekly-eval-box" class="form-box">
       <div class="section-header">
         <h2><i class="fa-solid fa-file-circle-check" style="color:#27ae60;"></i> تقرير زيارة المشرفة التعليمية لسير حصة القرآن</h2>
@@ -179,19 +183,64 @@
 
       <form id="weeklyEvalForm">
         <div class="form-grid">
+          <!-- كتابة اسم المعلمة نصياً -->
           <div class="form-group">
-            <label>اختر المعلمة (تعبئة تلقائية للبيانات):</label>
-            <select id="wTeacherSelect" onchange="autoFillTeacherData()" required>
-              <option value="">-- اختر المعلمة من السجل --</option>
-            </select>
+            <label>اسم المعلمة:</label>
+            <input type="text" id="wTeacherName" required placeholder="أدخلي اسم المعلمة ثلاثياً...">
           </div>
-          <div class="form-group"><label>اسم المركز:</label><input type="text" id="wCenter" required></div>
+
+          <!-- قائمة منسدلة لاسم المركز مع خيار أخرى -->
+          <div class="form-group">
+            <label>اسم المركز:</label>
+            <select id="wCenterSelect" onchange="toggleCustomInput('wCenterSelect', 'wCenterCustom')" required>
+              <option value="">-- اختر المركز --</option>
+              <option value="مركز الفرقان">مركز الفرقان</option>
+              <option value="مركز البيان">مركز البيان</option>
+              <option value="مركز النور">مركز النور</option>
+              <option value="أخرى">أخرى (كتابة يدوي)</option>
+            </select>
+            <input type="text" id="wCenterCustom" class="custom-input" placeholder="اكتبي اسم المركز هنا...">
+          </div>
+
           <div class="form-group">
             <label>الفترة:</label>
             <select id="wPeriod"><option value="صباحي">صباحي</option><option value="مسائي">مسائي</option></select>
           </div>
-          <div class="form-group"><label>المؤهل في القرآن:</label><input type="text" id="wQuranDegree" readonly style="background:#eef2f5;"></div>
-          <div class="form-group"><label>الفئة:</label><input type="text" id="wCategory" readonly style="background:#eef2f5;"></div>
+
+          <!-- قائمة منسدلة للمؤهل مع خيار أخرى -->
+          <div class="form-group">
+            <label>المؤهل في القرآن:</label>
+            <select id="wQuranDegreeSelect" onchange="toggleCustomInput('wQuranDegreeSelect', 'wQuranDegreeCustom')" required>
+              <option value="">-- اختر المؤهل --</option>
+              <option value="خاتمة لكتاب الله">خاتمة لكتاب الله</option>
+              <option value="حافظة 20 جزءاً">حافظة 20 جزءاً</option>
+              <option value="حافظة 10 أجزاء">حافظة 10 أجزاء</option>
+              <option value="مجازة بالسند">مجازة بالسند</option>
+              <option value="أخرى">أخرى (كتابة يدوي)</option>
+            </select>
+            <input type="text" id="wQuranDegreeCustom" class="custom-input" placeholder="اكتبي المؤهل هنا...">
+          </div>
+
+          <!-- قائمة منسدلة للفئة مع خيار أخرى -->
+          <div class="form-group">
+            <label>الفئة:</label>
+            <select id="wCategorySelect" onchange="toggleCustomInput('wCategorySelect', 'wCategoryCustom')" required>
+              <option value="">-- اختر الفئة --</option>
+              <option value="أمهات">أمهات</option>
+              <option value="فتيات">فتيات</option>
+              <option value="ناشئة">ناشئة</option>
+              <option value="طفولة">طفولة</option>
+              <option value="أخرى">أخرى (كتابة يدوي)</option>
+            </select>
+            <input type="text" id="wCategoryCustom" class="custom-input" placeholder="اكتبي الفئة هنا...">
+          </div>
+
+          <!-- إضافة سنوات الخبرة -->
+          <div class="form-group">
+            <label>سنوات الخبرة:</label>
+            <input type="number" id="wExperienceYears" min="0" value="1" placeholder="عدد السنوات">
+          </div>
+
           <div class="form-group"><label>اليوم:</label><input type="text" id="wDay" readonly style="background:#eef2f5; font-weight:bold;"></div>
           <div class="form-group"><label>التاريخ:</label><input type="text" id="wDate" readonly style="background:#eef2f5; font-weight:bold;"></div>
           <div class="form-group"><label>عنوان الدرس:</label><input type="text" id="wLessonTitle" required placeholder="سورة ..."></div>
@@ -256,7 +305,7 @@
           </tbody>
         </table>
 
-        <!-- بطاقة النتائج المزدوجة والتقدير الآلي الشرطي -->
+        <!-- بطاقة النتائج والتقدير الآلي -->
         <div class="score-summary">
           <div class="score-badge">الدرجة الخام (التقييم): <br><span id="wRawScore" style="color:var(--secondary-color); font-size:1.2rem;">100</span> / 100</div>
           <div class="score-badge">الدرجة الموزونة الكلية: <br><span id="wWeightedScore" style="color:var(--admin-color); font-size:1.3rem;">100</span> / 100</div>
@@ -268,8 +317,32 @@
           <textarea id="wNotes" rows="3" placeholder="أدخلي أي ملاحظات أو توصيات للمعلمة..."></textarea>
         </div>
 
-        <button type="submit" class="btn btn-warning" style="width:100%; margin-top:15px;"><i class="fa-solid fa-cloud-arrow-up"></i> حفظ الاستمارة الأسبوعية في قوقل شيت</button>
+        <!-- أزرار الحفظ المزدوجة (مسودة / إرسال وحفظ بالموقع وقوقل شيت) -->
+        <div class="btn-group">
+          <button type="button" class="btn btn-info" onclick="saveDraft()"><i class="fa-solid fa-floppy-disk"></i> حفظ كمسودة بالمرقع</button>
+          <button type="submit" class="btn btn-warning"><i class="fa-solid fa-cloud-arrow-up"></i> حفظ وإرسال (للموقع وقوقل شيت)</button>
+        </div>
       </form>
+
+      <!-- جدول الاستمارات المحفوظة بالموقع -->
+      <hr style="margin: 30px 0 15px 0;">
+      <h3 style="color:var(--main-color);"><i class="fa-solid fa-folder-closed"></i> الاستمارات المحفوظة والمسودات في الموقع</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>التاريخ</th>
+            <th>اسم المعلمة</th>
+            <th>المركز</th>
+            <th>الدرجة الموزونة</th>
+            <th>التقدير</th>
+            <th>الحالة</th>
+            <th>إجراء</th>
+          </tr>
+        </thead>
+        <tbody id="savedFormsTableBody">
+          <tr><td colspan="7">لا توجد استمارات محفوظة حالياً</td></tr>
+        </tbody>
+      </table>
     </div>
 
   </div>
@@ -277,7 +350,6 @@
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyFV_kYmCcrefr6f1AWIFIretPzP8oOlEGLx89vUIb-kYh_eGaxrmGNH1IwlDHgePDV3w/exec";
     let currentUser = "";
-    let employeesData = [];
 
     window.onload = function() {
       const savedUser = sessionStorage.getItem('supervisor_user');
@@ -287,6 +359,7 @@
       } else {
         document.getElementById('login-box').classList.add('active');
       }
+      loadSavedFormsFromStorage();
     };
 
     document.getElementById('loginForm').addEventListener('submit', function(e) {
@@ -313,39 +386,40 @@
       document.getElementById('dashboard-box').style.display = 'block';
     }
 
+    // --- إظهار وإخفاء حقل الإدخال اليدوي عند اختيار "أخرى" ---
+    function toggleCustomInput(selectId, customInputId) {
+      const select = document.getElementById(selectId);
+      const customInput = document.getElementById(customInputId);
+      if (select.value === "أخرى") {
+        customInput.style.display = "block";
+        customInput.required = true;
+      } else {
+        customInput.style.display = "none";
+        customInput.required = false;
+        customInput.value = "";
+      }
+    }
+
+    // جلب القيمة النهائية سواء من الاختيار أو من الإدخال اليدوي
+    function getSelectedOrCustomValue(selectId, customInputId) {
+      const selectVal = document.getElementById(selectId).value;
+      if (selectVal === "أخرى") {
+        return document.getElementById(customInputId).value;
+      }
+      return selectVal;
+    }
+
     function openWeeklyFormEval() {
       openSection('weekly-eval-box');
       const now = new Date();
       const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
       document.getElementById('wDay').value = days[now.getDay()];
       document.getElementById('wDate').value = now.toLocaleDateString('ar-SA');
-      loadTeachersForWeeklySelect();
       calculateWeeklyTotal();
+      loadSavedFormsFromStorage();
     }
 
-    function loadTeachersForWeeklySelect() {
-      fetch(SCRIPT_URL + "?action=getEmployees")
-      .then(res => res.json())
-      .then(data => {
-        employeesData = data;
-        const select = document.getElementById('wTeacherSelect');
-        select.innerHTML = '<option value="">-- اختر المعلمة من السجل --</option>';
-        data.forEach(emp => {
-          select.innerHTML += `<option value="${emp.teacher}">${emp.teacher}</option>`;
-        });
-      });
-    }
-
-    function autoFillTeacherData() {
-      const selectedTeacher = document.getElementById('wTeacherSelect').value;
-      const emp = employeesData.find(e => e.teacher === selectedTeacher);
-      if (emp) {
-        document.getElementById('wQuranDegree').value = emp.quranDegree || 'خاتمة';
-        document.getElementById('wCategory').value = emp.category || 'ناشئة';
-      }
-    }
-
-    // --- حساب الدرجة الموزونة الكلية وسلم التقديرات الشرطي ---
+    // --- حساب الدرجة الموزونة وسلم التقديرات ---
     function calculateWeeklyTotal() {
       let rawSum1 = 0, rawSum2 = 0, rawSum3 = 0;
 
@@ -353,9 +427,8 @@
       document.querySelectorAll('.w-score-2').forEach(input => { rawSum2 += parseFloat(input.value) || 0; });
       document.querySelectorAll('.w-score-3').forEach(input => { rawSum3 += parseFloat(input.value) || 0; });
 
-      const totalRawScore = rawSum1 + rawSum2 + rawSum3; // الدرجة الخام
+      const totalRawScore = rawSum1 + rawSum2 + rawSum3;
 
-      // احتساب الدرجة الموزونة
       const weighted1 = rawSum1 * 1.794;
       const weighted2 = rawSum2 * 1.66;
       const weighted3 = rawSum3 * 0.3636;
@@ -364,35 +437,28 @@
       document.getElementById('wRawScore').innerText = totalRawScore;
       document.getElementById('wWeightedScore').innerText = weightedScore;
 
-      // تطبيق سلم التقديرات بناءً على الدرجة الموزونة
       let rating = "لم تجتاز";
-      if (weightedScore >= 90) {
-        rating = "ممتاز";
-      } else if (weightedScore >= 80) {
-        rating = "جيد جداً";
-      } else if (weightedScore >= 70) {
-        rating = "جيد";
-      } else if (weightedScore >= 60) {
-        rating = "مقبول";
-      } else if (weightedScore >= 50) {
-        rating = "ضعيف";
-      } else {
-        rating = "لم تجتاز";
-      }
+      if (weightedScore >= 90) rating = "ممتاز";
+      else if (weightedScore >= 80) rating = "جيد جداً";
+      else if (weightedScore >= 70) rating = "جيد";
+      else if (weightedScore >= 60) rating = "مقبول";
+      else if (weightedScore >= 50) rating = "ضعيف";
 
       document.getElementById('wGradeRating').innerText = rating;
     }
 
-    document.getElementById('weeklyEvalForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const payload = {
-        action: "saveWeeklyForm",
+    // --- جمع كائن البيانات للتعامل معه للحفظ أو المسودة ---
+    function getFormDataObject(status = "مرسلة") {
+      return {
+        id: Date.now(),
+        status: status,
         supervisor: currentUser,
-        teacher: document.getElementById('wTeacherSelect').value,
-        center: document.getElementById('wCenter').value,
+        teacher: document.getElementById('wTeacherName').value,
+        center: getSelectedOrCustomValue('wCenterSelect', 'wCenterCustom'),
         period: document.getElementById('wPeriod').value,
-        quranDegree: document.getElementById('wQuranDegree').value,
-        category: document.getElementById('wCategory').value,
+        quranDegree: getSelectedOrCustomValue('wQuranDegreeSelect', 'wQuranDegreeCustom'),
+        category: getSelectedOrCustomValue('wCategorySelect', 'wCategoryCustom'),
+        experienceYears: document.getElementById('wExperienceYears').value,
         day: document.getElementById('wDay').value,
         date: document.getElementById('wDate').value,
         lessonTitle: document.getElementById('wLessonTitle').value,
@@ -405,14 +471,84 @@
         gradeRating: document.getElementById('wGradeRating').innerText,
         notes: document.getElementById('wNotes').value
       };
+    }
 
+    // --- حفظ كمسودة في الموقع ---
+    function saveDraft() {
+      const data = getFormDataObject("مسودة");
+      if(!data.teacher) {
+        alert("يرجى إدخال اسم المعلمة على الأقل لحفظ المسودة!");
+        return;
+      }
+      let savedForms = JSON.parse(localStorage.getItem('quran_weekly_forms') || "[]");
+      savedForms.push(data);
+      localStorage.setItem('quran_weekly_forms', JSON.stringify(savedForms));
+      alert("📝 تم حفظ الاستمارة كمسودة في الموقع بنجاح!");
+      loadSavedFormsFromStorage();
+    }
+
+    // --- حفظ واستغلال الإرسال (للموقع وقوقل شيت) ---
+    document.getElementById('weeklyEvalForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const payload = getFormDataObject("تم الحفظ والإرسال");
+      payload.action = "saveWeeklyForm";
+
+      // 1. الحفظ بالموقع تلقائياً
+      let savedForms = JSON.parse(localStorage.getItem('quran_weekly_forms') || "[]");
+      savedForms.push(payload);
+      localStorage.setItem('quran_weekly_forms', JSON.stringify(savedForms));
+      loadSavedFormsFromStorage();
+
+      // 2. الحفظ والإرسال لقوقل شيت
       fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
       .then(() => {
-        alert('✅ تم حفظ الاستمارة الأسبوعية بنجاح بحساب الدرجة الموزونة والتقدير!');
+        alert('✅ تم حفظ الاستمارة بنجاح في الموقع وفي قوقل شيت (Google Sheets)!');
         document.getElementById('weeklyEvalForm').reset();
-        openSection('weekly-menu-box');
+        calculateWeeklyTotal();
+      })
+      .catch(() => {
+        alert('⚠️️ تم الحفظ في الموقع بنجاح، وتطذر الإرسال لقوقل شيت بسبب الشبكة.');
       });
     });
+
+    // --- عرض الاستمارات المحفوظة والمسودات في جدول أسفل الاستمارة ---
+    function loadSavedFormsFromStorage() {
+      const savedForms = JSON.parse(localStorage.getItem('quran_weekly_forms') || "[]");
+      const tbody = document.getElementById('savedFormsTableBody');
+      if (!tbody) return;
+
+      if (savedForms.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7">لا توجد استمارات محفوظة حالياً</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = "";
+      savedForms.forEach((item, index) => {
+        const badgeColor = item.status === "مسودة" ? "#e67e22" : "#27ae60";
+        tbody.innerHTML += `
+          <tr>
+            <td>${item.date || '-'}</td>
+            <td><b>${item.teacher || '-'}</b></td>
+            <td>${item.center || '-'}</td>
+            <td>${item.weightedScore || '0'}</td>
+            <td>${item.gradeRating || '-'}</td>
+            <td><span style="background:${badgeColor}; color:white; padding:3px 8px; border-radius:4px; font-size:0.8rem;">${item.status}</span></td>
+            <td>
+              <button class="btn btn-secondary" style="padding:3px 8px; font-size:0.75rem; width:auto; display:inline-block;" onclick="deleteSavedForm(${index})">حذف</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function deleteSavedForm(index) {
+      if(confirm('هل أنتِ متأكدة من حذف هذه الاستمارة المحفوظة؟')) {
+        let savedForms = JSON.parse(localStorage.getItem('quran_weekly_forms') || "[]");
+        savedForms.splice(index, 1);
+        localStorage.setItem('quran_weekly_forms', JSON.stringify(savedForms));
+        loadSavedFormsFromStorage();
+      }
+    }
   </script>
 </body>
 </html>
